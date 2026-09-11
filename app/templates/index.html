@@ -27,7 +27,7 @@
         <a class="hero__tile" href="/catalogo?categoria={{ category.slug }}">
           <img src="{{ category.image }}" alt="{{ category.name }}">
           <strong>{{ category.name }}</strong>
-          <small>{{ category.products|length }} líneas disponibles</small>
+          <small>{{ category.products|length }} línea{{ '' if category.products|length == 1 else 's' }} disponible{{ '' if category.products|length == 1 else 's' }}</small>
         </a>
         {% endfor %}
       </div>
@@ -56,7 +56,7 @@
         <div class="cat-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
         <h3>{{ category.name }}</h3>
         <small>{{ category.tagline }}</small>
-        <span class="link-more">Ver {{ category.products|length }} líneas →</span>
+        <span class="link-more">Ver {{ category.products|length }} línea{{ '' if category.products|length == 1 else 's' }} →</span>
       </a>
       {% endfor %}
     </div>
