@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <div>
+      <span class="eyebrow">Fabricantes de envases desde 1994</span>
+      <h1>Envases que <span>protegen tu producto</span> y hacen crecer tu marca</h1>
+      <p class="lead">Diseñamos y fabricamos botellas, frascos, garrafas, garrafones, tapas y preformas en PET, PEAD y PVC. Catálogo técnico en línea, fichas descargables y cotización en menos de 24 horas.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="/catalogo">
+          Explorar catálogo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn--light" href="/cotizacion">Solicitar cotización</a>
+      </div>
+      <div class="hero__stats">
+        <div><strong>30+</strong><span>Años de experiencia</span></div>
+        <div><strong>60+</strong><span>Modelos en catálogo</span></div>
+        <div><strong>24 h</strong><span>Respuesta comercial</span></div>
+        <div><strong>100%</strong><span>Resina reciclable</span></div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__card">
+        {% for category in categories[:4] %}
+        <a class="hero__tile" href="/catalogo?categoria={{ category.slug }}">
+          <img src="{{ category.image }}" alt="{{ category.name }}">
+          <strong>{{ category.name }}</strong>
+          <small>{{ category.products|length }} líneas disponibles</small>
+        </a>
+        {% endfor %}
+      </div>
+      <div class="hero__float"><span class="dot"></span> Cotiza en línea · Entrega 7-10 días</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="container marquee__inner">
+    <span>Agua purificada</span><span>Refrescos y bebidas</span><span>Alimentos</span>
+    <span>Química y limpieza</span><span>Agroindustria</span><span>Cuidado personal</span>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="tagline">Catálogo por familia</span>
+      <h2>Encuentra el envase exacto para tu producto</h2>
+      <p>Cada familia incluye tipos, modelos, capacidades, colores disponibles y ficha técnica descargable en PDF.</p>
+    </div>
+    <div class="grid grid--3">
+      {% for category in categories %}
+      <a class="card cat-card reveal" href="/catalogo?categoria={{ category.slug }}">
+        <div class="cat-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
+        <h3>{{ category.name }}</h3>
+        <small>{{ category.tagline }}</small>
+        <span class="link-more">Ver {{ category.products|length }} líneas →</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="container">
+    <div class="section-head">
+      <span class="tagline">Más solicitados</span>
+      <h2>Productos destacados</h2>
+      <p>Los envases con mayor rotación entre nuestros clientes de bebidas, alimentos y química.</p>
+    </div>
+    <div class="grid grid--3">
+      {% for product in featured %}
+        {% include "partials/product_card.html" %}
+      {% endfor %}
+    </div>
+    <div style="margin-top:2rem"><a class="btn btn--ghost" href="/catalogo">Ver catálogo completo</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="container split">
+    <div>
+      <span class="tagline">Por qué Remsa</span>
+      <h2>Un socio de empaque, no solo un proveedor</h2>
+      <p>Acompañamos tu proyecto desde el diseño del envase hasta la entrega en planta, con control de calidad en cada lote y capacidad para personalizar color, gramaje y marca.</p>
+      <div class="grid" style="gap:1.4rem; margin-top:1.6rem">
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v6c0 5-3.5 8-8 8s-8-3-8-8V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div><h3>Calidad certificada</h3><p>Resinas grado alimenticio (FDA), inspección dimensional, pruebas de torque, hermeticidad y presión por lote.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/></svg></div>
+          <div><h3>Personalización real</h3><p>Pigmentado a color, protección UV, insertos con tu marca en alto relieve y desarrollo de molde exclusivo.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <div><h3>Entregas confiables</h3><p>Producción programada, inventario de seguridad y cobertura logística en toda la República Mexicana.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:2rem">
+      <h3>Calculadora rápida de tarima</h3>
+      <p style="font-size:.9rem">Estima cuántas piezas necesitas según tu producción mensual y te sugerimos la presentación más eficiente.</p>
+      <div class="field">
+        <label for="calc-units">Piezas requeridas al mes</label>
+        <input type="number" id="calc-units" min="1" value="50000">
+      </div>
+      <div class="field">
+        <label for="calc-box">Piezas por caja</label>
+        <input type="number" id="calc-box" min="1" value="240">
+      </div>
+      <div class="field">
+        <label for="calc-pallet">Cajas por tarima</label>
+        <input type="number" id="calc-pallet" min="1" value="10">
+      </div>
+      <div class="spec-grid" id="calc-output">
+        <div><small>Cajas</small><strong id="calc-boxes">—</strong></div>
+        <div><small>Tarimas</small><strong id="calc-pallets">—</strong></div>
+        <div><small>Entregas sugeridas</small><strong id="calc-trips">—</strong></div>
+      </div>
+      <a class="btn btn--primary btn--block" href="/cotizacion">Cotizar este volumen</a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-ink">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="tagline" style="color:#4fd1e8">Cómo trabajamos</span>
+      <h2>De la idea al envase en 4 pasos</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Diagnóstico</h3><p>Analizamos tu producto, proceso de llenado y logística para recomendar material y geometría.</p></div>
+      <div class="step"><h3>Propuesta técnica</h3><p>Recibes ficha técnica, muestra física y cotización con escalas de volumen.</p></div>
+      <div class="step"><h3>Validación</h3><p>Pruebas de llenado, torque y estiba en tu planta antes de liberar producción.</p></div>
+      <div class="step"><h3>Producción y entrega</h3><p>Fabricación programada con control de lote y entrega en la fecha comprometida.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="tagline">Clientes</span>
+      <h2>Lo que dicen de nosotros</h2>
+    </div>
+    <div class="testimonials">
+      <div class="card testimonial reveal">
+        <p>“Migramos toda nuestra línea de agua purificada a garrafones personalizados. La calidad del grabado y la consistencia del peso nos permitió reducir mermas.”</p>
+        <footer><span class="avatar">AP</span><span><strong>Alejandro P.</strong><br><small>Director de operaciones · Purificadora regional</small></span></footer>
+      </div>
+      <div class="card testimonial reveal">
+        <p>“El equipo técnico nos ayudó a bajar 3 gramos por botella sin perder resistencia de estiba. El ahorro anual fue inmediato.”</p>
+        <footer><span class="avatar">MR</span><span><strong>María R.</strong><br><small>Gerente de compras · Embotelladora</small></span></footer>
+      </div>
+      <div class="card testimonial reveal">
+        <p>“Necesitábamos garrafas compatibles con cloro y con entrega semanal. Cumplen la fecha comprometida desde hace tres años.”</p>
+        <footer><span class="avatar">JS</span><span><strong>Jorge S.</strong><br><small>Compras · Industria química</small></span></footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>¿Listo para cotizar tu envase?</h2>
+        <p>Arma tu lista de productos desde el catálogo y recibe una propuesta en menos de 24 horas hábiles.</p>
+      </div>
+      <div style="display:flex; gap:.8rem; flex-wrap:wrap">
+        <a class="btn btn--light" href="/catalogo">Ver catálogo</a>
+        <a class="btn btn--ghost" href="/cotizacion">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

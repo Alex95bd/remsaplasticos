@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso al panel · {{ company.name }}</title>
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div class="login-wrap">
+  <form class="login-card" method="post" action="/admin/login">
+    <img src="/static/img/logo.svg" alt="" width="52" height="52" style="margin-bottom:1rem">
+    <h1 style="font-size:1.5rem">Panel comercial</h1>
+    <p style="font-size:.9rem">Accede para revisar cotizaciones, mensajes y el desempeño del catálogo.</p>
+    {% if error %}<p class="form-feedback is-error">{{ error }}</p>{% endif %}
+    <div class="field"><label for="email">Correo</label><input id="email" name="email" type="email" required value="{{ settings.admin_email }}"></div>
+    <div class="field"><label for="password">Contraseña</label><input id="password" name="password" type="password" required></div>
+    <button class="btn btn--primary btn--block" type="submit">Entrar</button>
+    <a class="btn btn--ghost btn--block" href="/" style="margin-top:.6rem">Volver al sitio</a>
+  </form>
+</div>
+</body>
+</html>

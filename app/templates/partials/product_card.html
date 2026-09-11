@@ -1,0 +1,31 @@
+<article class="card product-card reveal">
+  <a class="product-card__media" href="/producto/{{ product.slug }}">
+    <div class="product-card__tags">
+      <span class="chip">{{ product.material }}</span>
+      {% if product.featured %}<span class="chip chip--dark">Destacado</span>{% endif %}
+    </div>
+    <img src="{{ product.image }}" alt="{{ product.name }}" loading="lazy">
+  </a>
+  <div class="product-card__body">
+    <h3><a href="/producto/{{ product.slug }}">{{ product.name }}</a></h3>
+    <p>{{ product.summary }}</p>
+    <div class="product-card__meta">
+      <span>Capacidades: <strong>{{ product.capacity_range }}</strong></span>
+      <span>· {{ product.variants|length }} modelo(s)</span>
+    </div>
+    <div class="product-card__colors">
+      {% for color in product.colors[:6] %}
+      <span class="swatch" style="background: {{ color.hex_code }}" title="{{ color.name }}"></span>
+      {% endfor %}
+      <small style="color:var(--muted)">{{ product.colors|length }} colores</small>
+    </div>
+    <div class="product-card__actions">
+      <a class="btn btn--primary btn--sm" href="/producto/{{ product.slug }}">Ver detalle</a>
+      <button class="btn btn--ghost btn--sm js-add-cart"
+              data-slug="{{ product.slug }}"
+              data-name="{{ product.name }}"
+              data-image="{{ product.image }}"
+              data-model="{{ product.variants[0].model if product.variants else '' }}">Cotizar</button>
+    </div>
+  </div>
+</article>

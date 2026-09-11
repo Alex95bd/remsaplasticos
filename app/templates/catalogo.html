@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Catálogo de envases · {{ company.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <div class="breadcrumbs"><a href="/">Inicio</a> <span>/</span> <span>Catálogo</span></div>
+    <h1>Catálogo de envases</h1>
+    <p>Filtra por familia, material, capacidad o color. Cada producto incluye sus tipos y modelos, colores disponibles, empaque y ficha técnica en PDF.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="catalog">
+    <form class="filters" method="get" action="/catalogo" id="filters-form">
+      <h3>Filtros</h3>
+
+      <fieldset>
+        <legend>Búsqueda</legend>
+        <input type="search" name="q" value="{{ filters.q }}" placeholder="Ej. botella 1 litro">
+      </fieldset>
+
+      <fieldset>
+        <legend>Familia</legend>
+        <label><input type="radio" name="categoria" value="" {{ 'checked' if not filters.categoria }}> Todas</label>
+        {% for category in categories %}
+        <label><input type="radio" name="categoria" value="{{ category.slug }}" {{ 'checked' if filters.categoria == category.slug }}> {{ category.name }}</label>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Material</legend>
+        <label><input type="radio" name="material" value="" {{ 'checked' if not filters.material }}> Todos</label>
+        {% for material in materials %}
+        <label><input type="radio" name="material" value="{{ material }}" {{ 'checked' if filters.material == material }}> {{ material }}</label>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Capacidad</legend>
+        {% set caps = [('', 'Todas'), ('0-500', 'Hasta 500 ml'), ('500-1000', '500 ml a 1 L'), ('1000-5000', '1 L a 5 L'), ('5000-', 'Más de 5 L')] %}
+        {% for value, label in caps %}
+        <label><input type="radio" name="capacidad" value="{{ value }}" {{ 'checked' if filters.capacidad == value }}> {{ label }}</label>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Color</legend>
+        <select name="color">
+          <option value="">Todos los colores</option>
+          {% for color in colors %}
+          <option value="{{ color.name }}" {{ 'selected' if filters.color == color.name }}>{{ color.name }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ordenar por</legend>
+        <select name="orden">
+          <option value="relevancia" {{ 'selected' if filters.orden == 'relevancia' }}>Relevancia</option>
+          <option value="destacados" {{ 'selected' if filters.orden == 'destacados' }}>Destacados primero</option>
+          <option value="nombre" {{ 'selected' if filters.orden == 'nombre' }}>Nombre (A-Z)</option>
+          <option value="capacidad" {{ 'selected' if filters.orden == 'capacidad' }}>Mayor capacidad</option>
+        </select>
+      </fieldset>
+
+      <button class="btn btn--primary btn--block" type="submit">Aplicar filtros</button>
+      <a class="btn btn--ghost btn--block" href="/catalogo" style="margin-top:.5rem">Limpiar</a>
+    </form>
+
+    <div>
+      <div class="catalog__toolbar">
+        <span class="catalog__count"><strong>{{ products|length }}</strong> producto(s) encontrados</span>
+        <a class="btn btn--ghost btn--sm" href="/cotizacion">Ver mi cotización</a>
+      </div>
+
+      {% if filters.categoria or filters.material or filters.q or filters.color or filters.capacidad %}
+      <div class="active-filters">
+        {% if filters.q %}<a href="/catalogo">Búsqueda: {{ filters.q }} ✕</a>{% endif %}
+        {% if filters.categoria %}<a href="/catalogo">Familia: {{ filters.categoria|replace('-', ' ')|title }} ✕</a>{% endif %}
+        {% if filters.material %}<a href="/catalogo">Material: {{ filters.material }} ✕</a>{% endif %}
+        {% if filters.color %}<a href="/catalogo">Color: {{ filters.color }} ✕</a>{% endif %}
+        {% if filters.capacidad %}<a href="/catalogo">Capacidad: {{ filters.capacidad }} ✕</a>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if products %}
+      <div class="grid grid--3">
+        {% for product in products %}
+          {% include "partials/product_card.html" %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty">
+        <h3>No encontramos productos con esos filtros</h3>
+        <p>Prueba con otra combinación o cuéntanos qué necesitas: desarrollamos envases a la medida.</p>
+        <a class="btn btn--primary" href="/contacto">Hablar con un asesor</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

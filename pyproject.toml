@@ -1,0 +1,14 @@
+[project]
+name = "remsa-plataforma"
+version = "1.0.0"
+description = "Plataforma comercial de Remsa Plásticos: catálogo, cotizador, chatbot y panel interno"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008: Depends()/Query() en valores por defecto es el idioma estándar de FastAPI
+ignore = ["B008"]

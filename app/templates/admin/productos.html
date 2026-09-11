@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block title %}Productos · Panel Remsa{% endblock %}
+
+{% block content %}
+<header class="admin-head">
+  <div><h1>Catálogo</h1><p>{{ products|length }} producto(s) cargados. Controla la visibilidad pública de cada uno.</p></div>
+  <a class="btn btn--ghost" href="/catalogo" target="_blank">Ver catálogo público ↗</a>
+</header>
+
+<section class="panel">
+  <table class="table">
+    <thead><tr><th>Producto</th><th>Familia</th><th>Material</th><th>Capacidades</th><th>Modelos</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td><strong>{{ product.name }}</strong><br><small><a href="/producto/{{ product.slug }}" target="_blank">/producto/{{ product.slug }}</a></small></td>
+        <td>{{ product.category.name }}</td>
+        <td>{{ product.material }}</td>
+        <td>{{ product.capacity_range }}</td>
+        <td>{{ product.variants|length }}</td>
+        <td><span class="pill pill--{{ 'ganada' if product.is_active else 'perdida' }}">{{ 'Publicado' if product.is_active else 'Oculto' }}</span></td>
+        <td>
+          <form method="post" action="/admin/productos/{{ product.id }}/visibilidad">
+            <button class="btn btn--sm btn--ghost" type="submit">{{ 'Ocultar' if product.is_active else 'Publicar' }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

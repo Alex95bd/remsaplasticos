@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} · {{ company.name }}{% endblock %}
+{% block description %}{{ product.summary }}{% endblock %}
+
+{% block content %}
+<section class="page-head" style="padding:2rem 0 2.2rem">
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="/">Inicio</a> <span>/</span>
+      <a href="/catalogo">Catálogo</a> <span>/</span>
+      <a href="/catalogo?categoria={{ product.category.slug }}">{{ product.category.name }}</a> <span>/</span>
+      <span>{{ product.name }}</span>
+    </div>
+    <h1 style="font-size:clamp(1.8rem,3vw,2.6rem)">{{ product.name }}</h1>
+  </div>
+</section>
+
+<div class="container">
+  <div class="product">
+    <div class="product__gallery">
+      <div class="product__stage">
+        <img src="{{ product.image }}" alt="{{ product.name }}" id="product-image">
+      </div>
+      <div class="product__thumbs">
+        {% for color in product.colors[:5] %}
+        <button type="button" class="js-color-thumb {{ 'is-active' if loop.first }}" data-color="{{ color.name }}" title="{{ color.name }}">
+          <span class="swatch" style="display:block;width:100%;height:100%;border-radius:9px;background:{{ color.hex_code }}"></span>
+        </button>
+        {% endfor %}
+      </div>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:.7rem">Imagen ilustrativa. El color seleccionado se aplica al cuerpo del envase; consulta muestras físicas antes de producción.</p>
+    </div>
+
+    <div>
+      <div class="product__chips">
+        <span class="chip">{{ product.category.name }}</span>
+        <span class="chip chip--soft">Material {{ product.material }}</span>
+        {% if product.line %}<span class="chip chip--soft">Línea {{ product.line }}</span>{% endif %}
+        {% if product.featured %}<span class="chip chip--dark">Más solicitado</span>{% endif %}
+      </div>
+
+      <p class="product__lead" style="margin-top:1rem">{{ product.summary }}</p>
+
+      <div class="spec-grid">
+        <div><small>Capacidades</small><strong>{{ product.capacity_range }}</strong></div>
+        <div><small>Modelos</small><strong>{{ product.variants|length }} disponibles</strong></div>
+        <div><small>Acabado de boca</small><strong>{{ product.neck_finish or '—' }}</strong></div>
+        <div><small>Pedido mínimo</small><strong>{{ product.min_order }}</strong></div>
+        <div><small>Entrega</small><strong>{{ product.lead_time }}</strong></div>
+        <div><small>Certificación</small><strong>{{ product.certifications }}</strong></div>
+      </div>
+
+      <h3 style="font-size:1rem">Colores disponibles</h3>
+      <div class="colors">
+        {% for color in product.colors %}
+        <span class="color-pill"><span class="swatch" style="background:{{ color.hex_code }}"></span>{{ color.name }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="quote-box">
+        <h3 style="font-size:1.05rem">Agregar a mi cotización</h3>
+        <div class="field-row">
+          <div class="field">
+            <label for="variant-select">Modelo / capacidad</label>
+            <select id="variant-select">
+              {% for variant in product.variants %}
+              <option value="{{ variant.model }}">{{ variant.model }} · {{ variant.capacity_label }}{% if variant.weight_g %} · {{ variant.weight_g }} g{% endif %}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="color-select">Color</label>
+            <select id="color-select">
+              {% for color in product.colors %}
+              <option value="{{ color.name }}">{{ color.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="qty-input">Cantidad (piezas)</label>
+            <input type="number" id="qty-input" min="1" step="1" value="10000">
+          </div>
+          <div class="field">
+            <label for="notes-input">Nota para el asesor</label>
+            <input type="text" id="notes-input" placeholder="Ej. requiere impresión de marca">
+          </div>
+        </div>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap">
+          <button class="btn btn--primary js-add-cart-detail"
+                  data-slug="{{ product.slug }}" data-name="{{ product.name }}" data-image="{{ product.image }}">
+            Agregar a cotización
+          </button>
+          <a class="btn btn--ghost" href="/api/productos/{{ product.slug }}/ficha-tecnica.pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+            Descargar ficha técnica (PDF)
+          </a>
+        </div>
+        <p class="form-feedback" id="add-feedback"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="is-active" data-tab="descripcion">Descripción</button>
+    <button data-tab="modelos">Modelos y capacidades</button>
+    <button data-tab="caracteristicas">Características</button>
+    <button data-tab="aplicaciones">Aplicaciones</button>
+    <button data-tab="empaque">Empaque y embalaje</button>
+  </div>
+
+  <div class="tab-panel is-active" id="tab-descripcion">
+    <div class="grid grid--2">
+      <div><p>{{ product.description }}</p></div>
+      <div class="card">
+        <h3>Datos técnicos generales</h3>
+        <table class="variant-table">
+          <tbody>
+            <tr><td><strong>Material</strong></td><td>{{ product.material }}</td></tr>
+            <tr><td><strong>Familia</strong></td><td>{{ product.category.name }}</td></tr>
+            <tr><td><strong>Acabado de boca</strong></td><td>{{ product.neck_finish or '—' }}</td></tr>
+            <tr><td><strong>Certificaciones</strong></td><td>{{ product.certifications }}</td></tr>
+            <tr><td><strong>Pedido mínimo</strong></td><td>{{ product.min_order }}</td></tr>
+            <tr><td><strong>Tiempo de entrega</strong></td><td>{{ product.lead_time }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-modelos">
+    <div class="table-wrap">
+      <table class="variant-table">
+        <thead>
+          <tr>
+            <th>Modelo</th><th>Capacidad</th><th>Peso</th><th>Altura</th><th>Diámetro</th>
+            <th>Boca</th><th>Pzas/caja</th><th>Cajas/tarima</th><th>Pzas/tarima</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for variant in product.variants %}
+          <tr>
+            <td><strong>{{ variant.model }}</strong></td>
+            <td>{{ variant.capacity_label }}</td>
+            <td>{{ variant.weight_g }} g</td>
+            <td>{{ variant.height_mm }} mm</td>
+            <td>{{ variant.diameter_mm }} mm</td>
+            <td>{{ variant.neck_finish or '—' }}</td>
+            <td>{{ variant.units_per_box }}</td>
+            <td>{{ variant.boxes_per_pallet }}</td>
+            <td>{{ variant.units_per_pallet }}</td>
+            <td>
+              <button class="btn btn--ghost btn--sm js-add-cart"
+                      data-slug="{{ product.slug }}" data-name="{{ product.name }}"
+                      data-image="{{ product.image }}" data-model="{{ variant.model }}">Cotizar</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-caracteristicas">
+    <ul class="check-list grid grid--2">
+      {% for feature in product.feature_list %}
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>{{ feature }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="tab-panel" id="tab-aplicaciones">
+    <div class="grid grid--4">
+      {% for application in product.application_list %}
+      <div class="card"><strong style="color:var(--ink)">{{ application }}</strong></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-empaque">
+    <ul class="check-list">
+      {% for item in product.packaging_list %}
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg><span>{{ item }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {% if related %}
+  <section style="padding:3rem 0 4rem">
+    <div class="section-head"><span class="tagline">También te puede interesar</span><h2>Productos relacionados</h2></div>
+    <div class="grid grid--3">
+      {% for product in related %}
+        {% include "partials/product_card.html" %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

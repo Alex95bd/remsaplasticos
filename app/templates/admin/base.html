@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Panel interno · {{ company.name }}{% endblock %}</title>
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="admin-side">
+    <a class="brand brand--light" href="/">
+      <img src="/static/img/logo-light.svg" alt="" width="36" height="36">
+      <span class="brand__text"><strong>REMSA</strong><small>Panel interno</small></span>
+    </a>
+    <nav>
+      <a href="/admin" class="{{ 'is-active' if active == 'dashboard' }}">Resumen</a>
+      <a href="/admin/cotizaciones" class="{{ 'is-active' if active == 'cotizaciones' }}">Cotizaciones</a>
+      <a href="/admin/mensajes" class="{{ 'is-active' if active == 'mensajes' }}">Mensajes y suscriptores</a>
+      <a href="/admin/productos" class="{{ 'is-active' if active == 'productos' }}">Productos</a>
+      <a href="/admin/conversaciones" class="{{ 'is-active' if active == 'conversaciones' }}">Chatbot</a>
+      <a href="/" target="_blank">Ver sitio ↗</a>
+      <a href="/admin/logout">Cerrar sesión</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

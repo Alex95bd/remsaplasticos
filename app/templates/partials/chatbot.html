@@ -1,0 +1,27 @@
+<button class="chat-fab" id="chat-fab" aria-label="Abrir asistente virtual">
+  <span class="pulse"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.4-4.2A8 8 0 1 1 21 12z"/>
+    <path d="M8.5 11h7M8.5 14.5h4"/>
+  </svg>
+  <span class="chat-fab__label">¿Te ayudo?</span>
+</button>
+
+<section class="chat-panel" id="chat-panel" aria-live="polite">
+  <header class="chat-panel__head">
+    <img src="/static/img/bot-avatar.svg" alt="">
+    <div>
+      <strong>Remi · Asistente Remsa</strong>
+      <small>En línea · responde al instante</small>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar">✕</button>
+  </header>
+  <div class="chat-log" id="chat-log"></div>
+  <div class="chat-suggestions" id="chat-suggestions"></div>
+  <form class="chat-form" id="chat-form">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" autocomplete="off" required>
+    <button type="submit" aria-label="Enviar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l16-8-6 8 6 8z"/></svg>
+    </button>
+  </form>
+</section>

@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}Chatbot · Panel Remsa{% endblock %}
+
+{% block content %}
+<header class="admin-head">
+  <div><h1>Conversaciones del asistente</h1><p>{{ sessions|length }} sesión(es) registradas. Úsalas para detectar dudas frecuentes y oportunidades de venta.</p></div>
+</header>
+
+{% if sessions %}
+<div class="admin-grid">
+  {% for session_id, messages in sessions.items() %}
+  <section class="panel">
+    <h2 style="font-size:.95rem">Sesión {{ session_id[:8] }}… <small>({{ messages|length }} mensajes)</small></h2>
+    <div class="chat-transcript">
+      {% for message in messages %}
+      <div class="msg msg--{{ 'user' if message.role == 'user' else 'bot' }}">{{ message.content }}</div>
+      {% endfor %}
+    </div>
+    <small>{{ messages[-1].created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Todavía nadie ha usado el chatbot.</p>
+{% endif %}
+{% endblock %}

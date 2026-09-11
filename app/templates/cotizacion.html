@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Solicitar cotización · {{ company.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <div class="breadcrumbs"><a href="/">Inicio</a> <span>/</span> <span>Cotización</span></div>
+    <h1>Solicita tu cotización</h1>
+    <p>Revisa los productos que agregaste, completa tus datos y un asesor comercial te responde en menos de 24 horas hábiles.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="quote-layout">
+    <div class="card">
+      <h2 style="font-size:1.3rem">Productos en tu solicitud</h2>
+      <div id="cart-list"></div>
+      <div id="cart-empty" class="empty" style="display:none;border:0;padding:2rem 0">
+        <h3>Tu lista está vacía</h3>
+        <p>Agrega productos desde el catálogo o describe tu necesidad en el formulario.</p>
+        <a class="btn btn--primary" href="/catalogo">Ir al catálogo</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:1.3rem">Tus datos</h2>
+      <form id="quote-form">
+        <div class="field-row">
+          <div class="field"><label for="q-name">Nombre completo *</label><input id="q-name" name="name" required></div>
+          <div class="field"><label for="q-company">Empresa</label><input id="q-company" name="company"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="q-email">Correo corporativo *</label><input id="q-email" name="email" type="email" required></div>
+          <div class="field"><label for="q-phone">Teléfono</label><input id="q-phone" name="phone"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="q-city">Ciudad / Estado</label><input id="q-city" name="city"></div>
+          <div class="field">
+            <label for="q-industry">Industria</label>
+            <select id="q-industry" name="industry">
+              <option value="">Selecciona…</option>
+              <option>Agua purificada</option>
+              <option>Bebidas y refrescos</option>
+              <option>Alimentos</option>
+              <option>Química y limpieza</option>
+              <option>Agroindustria</option>
+              <option>Cuidado personal / cosmética</option>
+              <option>Farmacéutica</option>
+              <option>Otra</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="q-message">Detalles del proyecto</label>
+          <textarea id="q-message" name="message" placeholder="Volumen mensual estimado, producto a envasar, requerimientos de color, impresión o fecha de entrega…"></textarea>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Enviar solicitud</button>
+        <p class="form-feedback" id="quote-feedback"></p>
+        <p style="font-size:.78rem;color:var(--muted);margin-top:.6rem">Al enviar aceptas que te contactemos con fines comerciales. No compartimos tus datos con terceros.</p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

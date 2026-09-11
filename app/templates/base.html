@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ company.name }} · {{ company.tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}Fabricante de envases de PET, PEAD y PVC: botellas, frascos, garrafas, garrafones, tapas y preformas. Catálogo técnico, fichas descargables y cotización en línea.{% endblock %}">
+  <meta property="og:title" content="{{ company.name }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<div class="topbar">
+  <div class="container topbar__inner">
+    <span class="topbar__item">Fabricación nacional · Entregas en toda la República</span>
+    <div class="topbar__links">
+      <a href="tel:{{ company.phone | replace(' ', '') | replace('(', '') | replace(')', '') }}">{{ company.phone }}</a>
+      <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+      <a class="topbar__admin" href="/admin">Portal interno</a>
+    </div>
+  </div>
+</div>
+
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a class="brand" href="/">
+      <img src="/static/img/logo.svg" alt="{{ company.name }}" width="40" height="40">
+      <span class="brand__text"><strong>REMSA</strong><small>Plásticos &amp; Envases</small></span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="/" class="{{ 'is-active' if active == 'home' }}">Inicio</a>
+      <div class="nav__dropdown">
+        <a href="/catalogo" class="{{ 'is-active' if active == 'catalogo' }}">Catálogo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="nav__menu">
+          {% for category in categories %}
+          <a href="/catalogo?categoria={{ category.slug }}">
+            <img src="{{ category.image }}" alt="" width="34" height="34">
+            <span><strong>{{ category.name }}</strong><small>{{ category.tagline }}</small></span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      <a href="/servicios" class="{{ 'is-active' if active == 'servicios' }}">Servicios</a>
+      <a href="/nosotros" class="{{ 'is-active' if active == 'nosotros' }}">Nosotros</a>
+      <a href="/contacto" class="{{ 'is-active' if active == 'contacto' }}">Contacto</a>
+    </nav>
+
+    <div class="header__actions">
+      <button class="icon-btn" id="search-toggle" aria-label="Buscar productos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+      <a class="btn btn--ghost quote-link" href="/cotizacion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M3 3h2.2l.8 3"/></svg>
+        Cotización <span class="badge" id="cart-count">0</span>
+      </a>
+      <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+
+  <div class="searchbar" id="searchbar">
+    <div class="container">
+      <form action="/catalogo" method="get" class="searchbar__form">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" name="q" id="global-search" placeholder="Busca por producto, capacidad o aplicación: botella 1 L, garrafón 20 L, tapa 28 mm…" autocomplete="off">
+        <button class="btn btn--primary" type="submit">Buscar</button>
+      </form>
+      <div class="searchbar__results" id="search-results"></div>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div>
+      <a class="brand brand--light" href="/">
+        <img src="/static/img/logo-light.svg" alt="{{ company.name }}" width="40" height="40">
+        <span class="brand__text"><strong>REMSA</strong><small>Plásticos &amp; Envases</small></span>
+      </a>
+      <p class="footer__about">Fabricamos envases de PET, PEAD y PVC desde 1994, acompañando a nuestros clientes desde el diseño del envase hasta la entrega en planta.</p>
+      <form class="newsletter" id="newsletter-form">
+        <input type="email" name="email" placeholder="Tu correo corporativo" required>
+        <button class="btn btn--primary" type="submit">Suscribirme</button>
+      </form>
+      <p class="form-feedback" id="newsletter-feedback"></p>
+    </div>
+    <div>
+      <h4>Catálogo</h4>
+      <ul>
+        {% for category in categories %}
+        <li><a href="/catalogo?categoria={{ category.slug }}">{{ category.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="/nosotros">Quiénes somos</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/cotizacion">Solicitar cotización</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+        <li><a href="/docs">API para integraciones</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul class="footer__contact">
+        <li>{{ company.address }}</li>
+        <li><a href="tel:{{ company.phone | replace(' ', '') }}">{{ company.phone }}</a></li>
+        <li><a href="tel:{{ company.phone_alt | replace(' ', '') }}">{{ company.phone_alt }}</a></li>
+        <li><a href="mailto:{{ company.email }}">{{ company.email }}</a></li>
+        <li>Lunes a viernes · 8:00 a 18:00 h</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© {{ 2026 }} {{ company.name }}. Todos los derechos reservados.</span>
+    <span>Aviso de privacidad · Términos y condiciones</span>
+  </div>
+</footer>
+
+<a class="whatsapp-fab" href="https://wa.me/{{ company.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.7 6L4 29l8.2-1.6c1.7.9 3.6 1.4 5.6 1.4h.2c6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-4.3.8.9-4.2-.3-.4c-1-1.6-1.6-3.4-1.6-5.4 0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10.8-9.3 10.8zm5.5-7.6c-.3-.2-1.8-.9-2-1s-.5-.1-.7.2-.8 1-1 1.2-.4.2-.7.1c-1.7-.8-2.9-1.5-4-3.4-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.6s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.4 3.7 5.8 5 2.2.9 3 .9 4 .8.6-.1 1.8-.7 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.5z"/></svg>
+</a>
+
+{% include "partials/chatbot.html" %}
+
+<script src="/static/js/main.js" defer></script>
+<script src="/static/js/chatbot.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Servicios · {{ company.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <div class="breadcrumbs"><a href="/">Inicio</a> <span>/</span> <span>Servicios</span></div>
+    <h1>Servicios de valor agregado</h1>
+    <p>Más allá del envase estándar: personalizamos, desarrollamos y acompañamos tu proyecto de empaque de principio a fin.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container grid grid--2">
+    <div class="card reveal">
+      <h2 style="font-size:1.3rem">Personalización de garrafones</h2>
+      <p>En el garrafón de 20 L con asa y boca roscada de 56 mm, la personalización se realiza mediante dos insertos con el grabado de su marca en alto relieve, además de variación de colores en el cuerpo y el asa.</p>
+      <ul class="check-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Grabado de marca en alto relieve</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Color diferenciado en cuerpo y asa</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Boca de 48 o 56 mm según tu tapa</span></li>
+      </ul>
+      <a class="btn btn--primary" href="/producto/garrafon-pet-20l">Ver garrafón 20 L</a>
+    </div>
+    <div class="card reveal">
+      <h2 style="font-size:1.3rem">Pigmentado de envases y protección UV</h2>
+      <p>Las botellas de PET y las garrafas de PEAD pueden pigmentarse en el color que su producto necesite para lograr una presentación más atractiva. También ofrecemos aditivo de protección UV en envases de PET.</p>
+      <ul class="check-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Color a carta Pantone</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Barrera UV para productos fotosensibles</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span>Acabado brillante, mate o perlado</span></li>
+      </ul>
+      <a class="btn btn--ghost" href="/cotizacion">Solicitar muestra</a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="tagline">Servicios</span>
+      <h2>Todo lo que incluye trabajar con Remsa</h2>
+    </div>
+    <div class="grid grid--3">
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg></div><div><h3>Asesoría técnica</h3><p>Selección de material, gramaje y geometría según tu producto y proceso de llenado.</p></div></div>
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 5v8l-9 5-9-5V8z"/></svg></div><div><h3>Desarrollo de molde</h3><p>Envase exclusivo con diseño CAD, prototipo impreso y validación en línea.</p></div></div>
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg></div><div><h3>Muestras físicas</h3><p>Enviamos muestras para pruebas de llenado, torque y estiba antes de producir.</p></div></div>
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v12H4z"/><path d="M4 10h16"/></svg></div><div><h3>Fichas técnicas</h3><p>Documentación descargable en PDF con dimensiones, tolerancias y datos de empaque.</p></div></div>
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l7-5 7 5"/></svg></div><div><h3>Programas de entrega</h3><p>Entregas programadas semanales o quincenales con inventario de seguridad.</p></div></div>
+      <div class="card feature reveal"><div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div><div><h3>Soporte postventa</h3><p>Seguimiento de desempeño en línea de llenado y atención a no conformidades.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <div><h2>Cuéntanos tu proyecto</h2><p>Un asesor técnico-comercial te contacta el mismo día hábil.</p></div>
+      <a class="btn btn--light" href="/cotizacion">Solicitar cotización</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

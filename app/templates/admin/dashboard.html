@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% block title %}Resumen · Panel Remsa{% endblock %}
+
+{% block content %}
+<header class="admin-head">
+  <div>
+    <h1>Resumen comercial</h1>
+    <p>Hola, {{ admin.name or admin.email }}. Este es el estado de la operación digital.</p>
+  </div>
+  <a class="btn btn--primary" href="/admin/cotizaciones">Ver cotizaciones</a>
+</header>
+
+<div class="kpi-grid">
+  <div class="kpi"><span>Cotizaciones totales</span><strong>{{ stats.cotizaciones }}</strong><small>{{ stats.cotizaciones_nuevas }} sin atender</small></div>
+  <div class="kpi"><span>Mensajes de contacto</span><strong>{{ stats.mensajes }}</strong><small>Formulario web</small></div>
+  <div class="kpi"><span>Suscriptores</span><strong>{{ stats.suscriptores }}</strong><small>Newsletter</small></div>
+  <div class="kpi"><span>Conversaciones del bot</span><strong>{{ stats.chats }}</strong><small>Sesiones únicas</small></div>
+  <div class="kpi"><span>Productos publicados</span><strong>{{ stats.productos }}</strong><small>{{ stats.categorias }} familias</small></div>
+  <div class="kpi"><span>Modelos en catálogo</span><strong>{{ stats.modelos }}</strong><small>Variantes técnicas</small></div>
+</div>
+
+<div class="admin-grid">
+  <section class="panel">
+    <h2>Últimas cotizaciones</h2>
+    {% if quotes %}
+    <table class="table">
+      <thead><tr><th>Folio</th><th>Cliente</th><th>Contacto</th><th>Productos</th><th>Estatus</th><th>Fecha</th></tr></thead>
+      <tbody>
+        {% for quote in quotes %}
+        <tr>
+          <td><strong>{{ quote.code }}</strong></td>
+          <td>{{ quote.name }}<br><small>{{ quote.company or '—' }}</small></td>
+          <td><small>{{ quote.email }}<br>{{ quote.phone or '' }}</small></td>
+          <td>{{ quote.items|length }}</td>
+          <td><span class="pill pill--{{ quote.status }}">{{ quote.status }}</span></td>
+          <td><small>{{ quote.created_at.strftime('%d/%m/%Y %H:%M') }}</small></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Aún no hay cotizaciones registradas. Comparte el catálogo para empezar a captar leads.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Catálogo por familia</h2>
+    <ul class="bar-list">
+      {% set max_count = (distribution | map(attribute=1) | max) if distribution else 1 %}
+      {% for name, count in distribution %}
+      <li>
+        <span>{{ name }}</span>
+        <div class="bar"><i style="width: {{ (count / max_count * 100) | round(0, 'floor') }}%"></i></div>
+        <strong>{{ count }}</strong>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

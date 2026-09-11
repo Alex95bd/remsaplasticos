@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}Cotizaciones · Panel Remsa{% endblock %}
+
+{% block content %}
+<header class="admin-head">
+  <div>
+    <h1>Cotizaciones</h1>
+    <p>{{ quotes|length }} solicitud(es){% if status %} con estatus «{{ status }}»{% endif %}.</p>
+  </div>
+  <form method="get" class="inline-form">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">Todos los estatus</option>
+      {% for option in ['nueva', 'en_proceso', 'cotizada', 'ganada', 'perdida'] %}
+      <option value="{{ option }}" {{ 'selected' if status == option }}>{{ option|replace('_', ' ')|capitalize }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</header>
+
+{% if quotes %}
+<div class="quote-list">
+  {% for quote in quotes %}
+  <article class="panel quote-card">
+    <header>
+      <div>
+        <span class="pill pill--{{ quote.status }}">{{ quote.status }}</span>
+        <h2>{{ quote.code }} · {{ quote.name }}</h2>
+        <p>{{ quote.company or 'Sin empresa' }} · {{ quote.city or 'Ciudad no indicada' }} · {{ quote.industry or 'Industria no indicada' }}</p>
+      </div>
+      <form method="post" action="/admin/cotizaciones/{{ quote.id }}/estatus" class="inline-form">
+        <select name="status">
+          {% for option in ['nueva', 'en_proceso', 'cotizada', 'ganada', 'perdida'] %}
+          <option value="{{ option }}" {{ 'selected' if quote.status == option }}>{{ option|replace('_', ' ')|capitalize }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn--sm btn--primary" type="submit">Actualizar</button>
+      </form>
+    </header>
+    <div class="quote-card__meta">
+      <span><a href="mailto:{{ quote.email }}">{{ quote.email }}</a></span>
+      {% if quote.phone %}<span><a href="tel:{{ quote.phone }}">{{ quote.phone }}</a></span>{% endif %}
+      <span>{{ quote.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+    </div>
+    {% if quote.message %}<p class="quote-card__msg">“{{ quote.message }}”</p>{% endif %}
+    <table class="table">
+      <thead><tr><th>Producto</th><th>Modelo</th><th>Color</th><th>Cantidad</th><th>Notas</th></tr></thead>
+      <tbody>
+        {% for item in quote.items %}
+        <tr>
+          <td><a href="/producto/{{ item.product_slug }}" target="_blank">{{ item.product_name }}</a></td>
+          <td>{{ item.model or '—' }}</td>
+          <td>{{ item.color or '—' }}</td>
+          <td>{{ '{:,}'.format(item.quantity) }}</td>
+          <td><small>{{ item.notes or '' }}</small></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5"><small>Solicitud sin productos seleccionados.</small></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No hay cotizaciones con este filtro.</p>
+{% endif %}
+{% endblock %}

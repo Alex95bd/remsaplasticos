@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% block title %}Mensajes · Panel Remsa{% endblock %}
+
+{% block content %}
+<header class="admin-head">
+  <div><h1>Mensajes y suscriptores</h1><p>{{ messages|length }} mensaje(s) · {{ subscribers|length }} suscriptor(es).</p></div>
+</header>
+
+<div class="admin-grid">
+  <section class="panel">
+    <h2>Formulario de contacto</h2>
+    {% if messages %}
+    <table class="table">
+      <thead><tr><th>Fecha</th><th>Nombre</th><th>Asunto</th><th>Mensaje</th></tr></thead>
+      <tbody>
+        {% for message in messages %}
+        <tr>
+          <td><small>{{ message.created_at.strftime('%d/%m/%Y %H:%M') }}</small></td>
+          <td>{{ message.name }}<br><small><a href="mailto:{{ message.email }}">{{ message.email }}</a></small></td>
+          <td>{{ message.subject }}</td>
+          <td><small>{{ message.message }}</small></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">Sin mensajes todavía.</p>{% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Newsletter</h2>
+    {% if subscribers %}
+    <ul class="plain-list">
+      {% for subscriber in subscribers %}
+      <li><span>{{ subscriber.email }}</span><small>{{ subscriber.created_at.strftime('%d/%m/%Y') }}</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="empty">Sin suscriptores todavía.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}
