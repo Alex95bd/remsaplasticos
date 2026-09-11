@@ -101,6 +101,21 @@ el usuario administrador**. No hay que ejecutar migraciones.
 > Cambia `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env` **antes** del primer arranque (o borra
 > `remsa.db` y vuelve a arrancar para recrear el usuario).
 
+### Ejecutar desde Visual Studio Code
+
+1. Abre la carpeta del proyecto (`Archivo → Abrir carpeta…`).
+2. Instala las extensiones recomendadas que sugiere VS Code al abrir el proyecto:
+   **Python**, **Pylance** y **Ruff**.
+3. Crea el entorno virtual (`python -m venv .venv`) y selecciónalo con
+   `Ctrl+Shift+P → Python: Select Interpreter → .venv`.
+4. Instala dependencias y copia `.env` como en los pasos 3 y 4 de arriba, usando la
+   terminal integrada (`Ctrl+ñ` / `Ctrl+``).
+5. Pulsa `F5` y elige **Remsa: uvicorn (reload)** para arrancar con depurador y recarga
+   automática, o ejecuta `uvicorn app.main:app --reload` en la terminal.
+
+Los puntos de interrupción funcionan en los routers de `app/routers/` y en las plantillas
+Jinja2 (`jinja: true` ya está activado en `.vscode/launch.json`).
+
 ---
 
 ## 4. Configuración (`.env`)
