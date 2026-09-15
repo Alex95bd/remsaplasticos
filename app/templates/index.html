@@ -74,7 +74,9 @@
         </ul>
       </div>
       <div class="families__figure">
-        <img src="/static/img/hero-envases.webp" alt="Envases fabricados por Remsa" loading="lazy">
+        <img src="/static/img/foto-garrafon-azul.webp" alt="Garrafón PET de 20 litros fabricado por Remsa" loading="lazy">
+        <img src="/static/img/foto-preforma-azul.webp" alt="Preforma PET azul" loading="lazy">
+        <img src="/static/img/foto-tapa-azul.webp" alt="Tapa de rosca azul" loading="lazy">
       </div>
     </div>
 
@@ -82,6 +84,7 @@
       {% for category in categories %}
       <a class="family-card reveal" href="/catalogo?categoria={{ category.slug }}">
         <div class="family-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
+        <span class="family-card__rule" aria-hidden="true"></span>
         <h3>{{ category.name }}</h3>
         <small>{{ category.tagline }}</small>
         <span class="family-card__go" aria-hidden="true">

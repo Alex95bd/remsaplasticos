@@ -552,6 +552,21 @@ PRODUCTS = [
 ]
 
 
+CATEGORY_PHOTOS = {
+    "botellas-pet": "/static/img/foto-botella-pet.webp",
+    "frascos-pet": "/static/img/foto-frasco-granulos.webp",
+    "garrafas-pead": "/static/img/foto-garrafa-pead.webp",
+    "garrafas-pet": "/static/img/foto-garrafa-pet.webp",
+    "garrafones-y-botellones": "/static/img/foto-garrafon-azul.webp",
+    "tapas": "/static/img/foto-tapa-azul.webp",
+    "preformas": "/static/img/foto-preforma-transparente.webp",
+}
+
+
+def category_image(slug: str) -> str:
+    return CATEGORY_PHOTOS.get(slug, f"/static/img/cat-{slug}.svg")
+
+
 def seed(db: Session, *, force: bool = False) -> None:
     if db.query(Category).count() and not force:
         return
@@ -569,8 +584,10 @@ def seed(db: Session, *, force: bool = False) -> None:
     for index, data in enumerate(CATEGORIES):
         category = db.query(Category).filter_by(slug=data["slug"]).one_or_none()
         if category is None:
-            category = Category(**data, position=index, image=f"/static/img/cat-{data['slug']}.svg")
+            category = Category(**data, position=index, image=category_image(data["slug"]))
             db.add(category)
+        else:
+            category.image = category_image(data["slug"])
         category_map[data["slug"]] = category
     db.flush()
 
@@ -591,7 +608,7 @@ def seed(db: Session, *, force: bool = False) -> None:
             neck_finish=data["neck_finish"],
             featured=data.get("featured", False),
             position=index,
-            image=f"/static/img/cat-{data['category']}.svg",
+            image=category_image(data["category"]),
         )
         product.colors = [color_map[name] for name in data["colors"] if name in color_map]
         for model, capacity, weight, height, diameter, neck, upb, bpp in data["variants"]:
