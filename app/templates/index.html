@@ -60,22 +60,44 @@
   </div>
 </div>
 
-<section>
+<section class="families">
   <div class="container">
-    <div class="section-head section-head--center">
-      <span class="tagline">Catálogo por familia</span>
-      <h2>Encuentra el envase exacto para tu producto</h2>
-      <p>Cada familia incluye tipos, modelos, capacidades, colores disponibles y ficha técnica descargable en PDF.</p>
+    <div class="families__head">
+      <div>
+        <span class="tagline tagline--light">Nuestros productos</span>
+        <h2>Encuentra el envase exacto para tu producto</h2>
+        <p>Fabricamos envases plásticos de alta calidad, diseñados para cubrir las necesidades de diferentes industrias. Contamos con una amplia variedad de presentaciones y capacidades.</p>
+        <ul class="pill-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Alta calidad</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Variedad de presentaciones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Soluciones sostenibles</li>
+        </ul>
+      </div>
+      <div class="families__figure">
+        <img src="/static/img/hero-envases.webp" alt="Envases fabricados por Remsa" loading="lazy">
+      </div>
     </div>
-    <div class="grid grid--3">
+
+    <div class="families__grid">
       {% for category in categories %}
-      <a class="card cat-card reveal" href="/catalogo?categoria={{ category.slug }}">
-        <div class="cat-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
+      <a class="family-card reveal" href="/catalogo?categoria={{ category.slug }}">
+        <div class="family-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
         <h3>{{ category.name }}</h3>
         <small>{{ category.tagline }}</small>
-        <span class="link-more">Ver {{ category.products|length }} línea{{ '' if category.products|length == 1 else 's' }} →</span>
+        <span class="family-card__go" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </span>
       </a>
       {% endfor %}
+    </div>
+
+    <div class="families__cta">
+      <span class="families__cta-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v6c0 5-3.5 8-8 8s-8-3-8-8V7z"/><path d="M9 12l2 2 4-4"/></svg>
+        Soluciones plásticas para un mejor futuro
+      </span>
+      <p>En Remsa nos enfocamos en ofrecer productos de alta calidad, diseñados para cubrir tus necesidades.</p>
+      <a class="btn btn--primary" href="/cotizacion">Cotiza ahora →</a>
     </div>
   </div>
 </section>
