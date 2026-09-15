@@ -581,7 +581,12 @@ section { padding: 4.5rem 0; }
   .nav__dropdown.is-open .nav__menu { display: grid; }
   .topbar__item { display: none; }
   .header .brand__text small { display: none; }
-  .header .brand img { width: 42px; height: 42px; }
+  .header .brand__text strong { font-size: 1.45rem; }
+  .header .brand img { width: 40px; height: 40px; }
+  .header__inner { gap: .5rem; }
+  .header__actions { gap: .35rem; margin-left: auto; }
+  .quote-link__label { display: none; }
+  .quote-link { padding: .6rem .8rem; }
   .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .hero__inner { grid-template-columns: 1fr; padding: 3rem 0 4rem; }
   .hero__stats--icons { grid-template-columns: repeat(2, 1fr); gap: 1rem 0; max-width: none; }
