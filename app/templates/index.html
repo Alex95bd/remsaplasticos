@@ -3,56 +3,54 @@
 {% block content %}
 <section class="hero">
   <img class="hero__bg" src="/static/img/hero-planta.webp" alt="" aria-hidden="true">
+  <svg class="hero__wave" viewBox="0 0 1440 620" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M1440 620H760c150-30 290-86 400-176 120-98 210-206 280-284z" fill="#0b63c5" opacity=".6"/>
+    <path d="M1440 620H980c120-40 226-104 306-190 60-64 106-130 154-196z" fill="#4fd1e8" opacity=".22"/>
+  </svg>
   <div class="container hero__inner">
     <div class="hero__copy">
-      <span class="eyebrow">Envases plásticos de alta calidad</span>
-      <h1>Soluciones en <span>envases plásticos</span> para tu negocio</h1>
-      <p class="lead">Ofrecemos una amplia variedad de envases plásticos para diferentes industrias, con la mejor calidad, resistencia y servicio.</p>
-      <ul class="hero__features">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
-          <span>Calidad<br>garantizada</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h10v9H3z"/><path d="M13 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>
-          <span>Entrega<br>oportuna</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L7.5 21l4.5-2.2L16.5 21 15 13.5"/></svg>
-          <span>Precios<br>competitivos</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 4c0 8-4.5 12-9 12a5 5 0 01-5-5c0-4.5 4-7 14-7z"/><path d="M5 20c2-5 5-7.5 9-9"/></svg>
-          <span>Compromiso<br>con el medio ambiente</span>
-        </li>
-      </ul>
+      <span class="eyebrow eyebrow--bar">Fabricantes de envases desde 1994</span>
+      <h1><em>REMSA</em><span>Envases que impulsan tu negocio</span></h1>
+      <p class="lead">Fabricamos envases de PET, PEAD y PVC. REMSA nació en 1994 para atender la demanda de botellas PET y garrafas PEAD en el sureste mexicano. Evolucionamos con el mercado, perfeccionando nuestra experiencia en resinas plásticas. Hoy ofrecemos una amplia variedad de preformas, botellas, garrafones y tapas.</p>
       <div class="hero__cta">
         <a class="btn btn--primary btn--pill" href="/catalogo">
-          Ver catálogo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4z"/><path d="M20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg>
+          Explorar catálogo
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a class="btn btn--light btn--pill" href="/cotizacion">Solicitar cotización</a>
+        <a class="btn btn--light btn--pill" href="/cotizacion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>
+          Solicitar cotización
+        </a>
       </div>
+      <ul class="hero__stats hero__stats--icons">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M9 3L6 8l6 13 6-13-3-5"/></svg>
+          <span><strong>30+</strong>Años de experiencia</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>
+          <span><strong>60+</strong>Modelos en catálogo</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M13 6l-4 7h4l-1 5 4-7h-4z"/></svg>
+          <span><strong>24 h</strong>Respuesta comercial</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 6l2-3 2 3"/><path d="M9 3l4 7-3 1.8"/><path d="M20 14l-2 3-3-1"/><path d="M18 17l-6 .2-1.8-3"/><path d="M4 16l1 3.4 3.4-.4"/><path d="M5 19.4L8.5 13l3.4.6"/></svg>
+          <span><strong>100%</strong>Resina reciclable</span>
+        </li>
+      </ul>
     </div>
-    <div class="hero__visual">
-      <img class="hero__product" src="/static/img/hero-envases.webp"
-           alt="Garrafón, botellas PET, preforma, frasco y tapas fabricados por Remsa">
-      <div class="hero__float"><span class="dot"></span> Cotiza en línea · Entrega 7-10 días</div>
-    </div>
+    <a class="hero__media" href="/servicios">
+      <span class="hero__play">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6.5l9 5.5-9 5.5z"/></svg>
+      </span>
+      <span class="hero__media-text"><strong>Producción REMSA</strong><small>Envases listos para tu operación</small></span>
+    </a>
   </div>
-  <svg class="hero__wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 120V44c240 52 520 62 900 18C1130 35 1310 14 1440 0v120z" fill="#0a58c9" opacity=".92"/>
-    <path d="M0 120V70c260 44 560 48 940 6 190-21 350-45 500-63v107z" fill="#1178e6" opacity=".55"/>
-  </svg>
-</section>
-
-<section class="stats-band">
-  <div class="container stats-band__inner">
-    <div><strong>30+</strong><span>Años de experiencia</span></div>
-    <div><strong>60+</strong><span>Modelos en catálogo</span></div>
-    <div><strong>24 h</strong><span>Respuesta comercial</span></div>
-    <div><strong>100%</strong><span>Resina reciclable</span></div>
-  </div>
+  <img class="hero__product" src="/static/img/hero-envases.webp"
+       alt="Garrafón, botellas PET, preforma, frasco y tapas fabricados por Remsa">
 </section>
 
 <div class="marquee">
