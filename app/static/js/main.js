@@ -167,14 +167,14 @@
   const calcInputs = ['#calc-units', '#calc-box', '#calc-pallet'].map((s) => $(s));
   if (calcInputs.every(Boolean)) {
     const compute = () => {
-      const units = Number(calcInputs[0].value) || 0;
-      const perBox = Number(calcInputs[1].value) || 1;
-      const perPallet = Number(calcInputs[2].value) || 1;
+      const units = Math.max(0, Number(calcInputs[0].value) || 0);
+      const perBox = Math.max(1, Number(calcInputs[1].value) || 1);
+      const perPallet = Math.max(1, Number(calcInputs[2].value) || 1);
       const boxes = Math.ceil(units / perBox);
       const pallets = Math.ceil(boxes / perPallet);
       $('#calc-boxes').textContent = boxes.toLocaleString('es-MX');
       $('#calc-pallets').textContent = pallets.toLocaleString('es-MX');
-      $('#calc-trips').textContent = Math.max(1, Math.ceil(pallets / 22)) + ' camión(es)';
+      $('#calc-trips').textContent = (pallets ? Math.ceil(pallets / 22) : 0) + ' camión(es)';
     };
     calcInputs.forEach((i) => i.addEventListener('input', compute));
     compute();

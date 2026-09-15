@@ -18,10 +18,19 @@
 
 <div class="topbar">
   <div class="container topbar__inner">
-    <span class="topbar__item">Fabricación nacional · Entregas en toda la República</span>
+    <span class="topbar__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 20V9l5-3 5 3v11"/><path d="M13 20V12h8v8"/><path d="M16 16h2"/></svg>
+      Fabricación nacional · Entregas en toda la República
+    </span>
     <div class="topbar__links">
-      <a href="tel:{{ company.phone | replace(' ', '') | replace('(', '') | replace(')', '') }}">{{ company.phone }}</a>
-      <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+      <a href="tel:{{ company.phone | replace(' ', '') | replace('(', '') | replace(')', '') }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a1 1 0 01-1.1 1A16 16 0 014 5.1 1 1 0 015 4z"/></svg>
+        {{ company.phone }}
+      </a>
+      <a href="mailto:{{ company.email }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        {{ company.email }}
+      </a>
       <a class="topbar__admin" href="/admin">Portal interno</a>
     </div>
   </div>
@@ -31,7 +40,7 @@
   <div class="container header__inner">
     <a class="brand" href="/">
       <img src="/static/img/logo.svg" alt="{{ company.name }}" width="40" height="40">
-      <span class="brand__text"><strong>REMSA</strong><small>Plásticos &amp; Envases</small></span>
+      <span class="brand__text"><strong>REMSA</strong><small>Recipientes y Empaques de México, S.A. de C.V.</small></span>
     </a>
 
     <nav class="nav" id="nav">
@@ -58,7 +67,7 @@
       </button>
       <a class="btn btn--ghost quote-link" href="/cotizacion">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M3 3h2.2l.8 3"/></svg>
-        Cotización <span class="badge" id="cart-count">0</span>
+        <span class="quote-link__label">Cotización</span> <span class="badge" id="cart-count">0</span>
       </a>
       <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>

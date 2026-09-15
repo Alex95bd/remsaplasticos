@@ -2,38 +2,55 @@
 
 {% block content %}
 <section class="hero">
+  <img class="hero__bg" src="/static/img/hero-planta.webp" alt="" aria-hidden="true">
+  <svg class="hero__wave" viewBox="0 0 1440 620" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M1440 620H760c150-30 290-86 400-176 120-98 210-206 280-284z" fill="#0b63c5" opacity=".6"/>
+    <path d="M1440 620H980c120-40 226-104 306-190 60-64 106-130 154-196z" fill="#4fd1e8" opacity=".22"/>
+  </svg>
   <div class="container hero__inner">
-    <div>
-      <span class="eyebrow">Fabricantes de envases desde 1994</span>
-      <h1>Envases que <span>protegen tu producto</span> y hacen crecer tu marca</h1>
-      <p class="lead">Diseñamos y fabricamos botellas, frascos, garrafas, garrafones, tapas y preformas en PET, PEAD y PVC. Catálogo técnico en línea, fichas descargables y cotización en menos de 24 horas.</p>
+    <div class="hero__copy">
+      <span class="eyebrow eyebrow--bar">Fabricantes de envases desde 1994</span>
+      <h1><em>REMSA</em><span>Envases que impulsan tu negocio</span></h1>
+      <p class="lead">Fabricamos envases de PET, PEAD y PVC. REMSA nació en 1994 para atender la demanda de botellas PET y garrafas PEAD en el sureste mexicano. Evolucionamos con el mercado, perfeccionando nuestra experiencia en resinas plásticas. Hoy ofrecemos una amplia variedad de preformas, botellas, garrafones y tapas.</p>
       <div class="hero__cta">
-        <a class="btn btn--primary" href="/catalogo">
+        <a class="btn btn--primary btn--pill" href="/catalogo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4z"/><path d="M20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg>
           Explorar catálogo
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a class="btn btn--light" href="/cotizacion">Solicitar cotización</a>
-      </div>
-      <div class="hero__stats">
-        <div><strong>30+</strong><span>Años de experiencia</span></div>
-        <div><strong>60+</strong><span>Modelos en catálogo</span></div>
-        <div><strong>24 h</strong><span>Respuesta comercial</span></div>
-        <div><strong>100%</strong><span>Resina reciclable</span></div>
-      </div>
-    </div>
-    <div class="hero__visual">
-      <div class="hero__card">
-        {% for category in categories[:4] %}
-        <a class="hero__tile" href="/catalogo?categoria={{ category.slug }}">
-          <img src="{{ category.image }}" alt="{{ category.name }}">
-          <strong>{{ category.name }}</strong>
-          <small>{{ category.products|length }} línea{{ '' if category.products|length == 1 else 's' }} disponible{{ '' if category.products|length == 1 else 's' }}</small>
+        <a class="btn btn--light btn--pill" href="/cotizacion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>
+          Solicitar cotización
         </a>
-        {% endfor %}
       </div>
-      <div class="hero__float"><span class="dot"></span> Cotiza en línea · Entrega 7-10 días</div>
+      <ul class="hero__stats hero__stats--icons">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M9 3L6 8l6 13 6-13-3-5"/></svg>
+          <span><strong>30+</strong>Años de experiencia</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>
+          <span><strong>60+</strong>Modelos en catálogo</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M13 6l-4 7h4l-1 5 4-7h-4z"/></svg>
+          <span><strong>24 h</strong>Respuesta comercial</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 6l2-3 2 3"/><path d="M9 3l4 7-3 1.8"/><path d="M20 14l-2 3-3-1"/><path d="M18 17l-6 .2-1.8-3"/><path d="M4 16l1 3.4 3.4-.4"/><path d="M5 19.4L8.5 13l3.4.6"/></svg>
+          <span><strong>100%</strong>Resina reciclable</span>
+        </li>
+      </ul>
     </div>
+    <a class="hero__media" href="/servicios">
+      <span class="hero__play">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6.5l9 5.5-9 5.5z"/></svg>
+      </span>
+      <span class="hero__media-text"><strong>Producción REMSA</strong><small>Envases listos para tu operación</small></span>
+    </a>
   </div>
+  <img class="hero__product" src="/static/img/hero-envases.webp"
+       alt="Garrafón, botellas PET, preforma, frasco y tapas fabricados por Remsa">
 </section>
 
 <div class="marquee">
@@ -43,22 +60,47 @@
   </div>
 </div>
 
-<section>
+<section class="families">
   <div class="container">
-    <div class="section-head section-head--center">
-      <span class="tagline">Catálogo por familia</span>
-      <h2>Encuentra el envase exacto para tu producto</h2>
-      <p>Cada familia incluye tipos, modelos, capacidades, colores disponibles y ficha técnica descargable en PDF.</p>
+    <div class="families__head">
+      <div>
+        <span class="tagline tagline--light">Nuestros productos</span>
+        <h2>Encuentra el envase exacto para tu producto</h2>
+        <p>Fabricamos envases plásticos de alta calidad, diseñados para cubrir las necesidades de diferentes industrias. Contamos con una amplia variedad de presentaciones y capacidades.</p>
+        <ul class="pill-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Alta calidad</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Variedad de presentaciones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg> Soluciones sostenibles</li>
+        </ul>
+      </div>
+      <div class="families__figure">
+        <img src="/static/img/foto-garrafon-azul.webp" alt="Garrafón PET de 20 litros fabricado por Remsa" loading="lazy">
+        <img src="/static/img/foto-preforma-azul.webp" alt="Preforma PET azul" loading="lazy">
+        <img src="/static/img/foto-tapa-azul.webp" alt="Tapa de rosca azul" loading="lazy">
+      </div>
     </div>
-    <div class="grid grid--3">
+
+    <div class="families__grid">
       {% for category in categories %}
-      <a class="card cat-card reveal" href="/catalogo?categoria={{ category.slug }}">
-        <div class="cat-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
+      <a class="family-card reveal" href="/catalogo?categoria={{ category.slug }}">
+        <div class="family-card__img"><img src="{{ category.image }}" alt="{{ category.name }}" loading="lazy"></div>
+        <span class="family-card__rule" aria-hidden="true"></span>
         <h3>{{ category.name }}</h3>
         <small>{{ category.tagline }}</small>
-        <span class="link-more">Ver {{ category.products|length }} línea{{ '' if category.products|length == 1 else 's' }} →</span>
+        <span class="family-card__go" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </span>
       </a>
       {% endfor %}
+    </div>
+
+    <div class="families__cta">
+      <span class="families__cta-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v6c0 5-3.5 8-8 8s-8-3-8-8V7z"/><path d="M9 12l2 2 4-4"/></svg>
+        Soluciones plásticas para un mejor futuro
+      </span>
+      <p>En Remsa nos enfocamos en ofrecer productos de alta calidad, diseñados para cubrir tus necesidades.</p>
+      <a class="btn btn--primary" href="/cotizacion">Cotiza ahora →</a>
     </div>
   </div>
 </section>
