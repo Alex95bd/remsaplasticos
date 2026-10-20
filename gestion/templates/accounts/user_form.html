@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% if target %}Editar usuario{% else %}Nuevo usuario{% endif %}{% endblock %}
+{% block page_title %}Usuarios{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">{% if target %}Editar usuario «{{ target.username }}»{% else %}Nuevo usuario{% endif %}</h1>
+<div class="row"><div class="col-xl-8">
+<div class="card border-0 shadow-sm"><div class="card-body">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "partials/form_errors.html" %}
+    <div class="row">
+      {% for field in form %}
+        <div class="{% if field.widget_type == 'checkboxselectmultiple' or field.name == 'password1' or field.name == 'password2' %}col-12{% else %}col-md-6{% endif %}">{% include "partials/form_field.html" %}</div>
+      {% endfor %}
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar</button>
+      <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div></div>
+</div></div>
+{% endblock %}

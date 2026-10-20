@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}{{ product.sku }}{% endblock %}
+{% block page_title %}Catálogo de productos{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <a href="{% url 'catalog:product_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Productos</a>
+    <h1 class="h4 fw-bold text-navy mb-0 mt-1">{{ product.name }}</h1>
+    <div class="text-muted">{{ product.sku }} {% if product.is_active %}<span class="badge text-bg-success ms-1">Activo</span>{% else %}<span class="badge text-bg-secondary ms-1">Inactivo</span>{% endif %}</div>
+  </div>
+  {% if perms.catalog.change_product %}
+  <div class="d-flex gap-2">
+    <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i> Editar</a>
+    <form method="post" action="{% url 'catalog:product_toggle_active' product.pk %}" data-confirm="{% if product.is_active %}¿Desactivar este producto? Dejará de aparecer en los listados de activos.{% else %}¿Activar este producto?{% endif %}">
+      {% csrf_token %}
+      <button class="btn {% if product.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">{% if product.is_active %}<i class="bi bi-archive me-1"></i> Desactivar{% else %}<i class="bi bi-arrow-counterclockwise me-1"></i> Activar{% endif %}</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-4">Categoría</dt><dd class="col-sm-8">{{ product.category.name }}</dd>
+        <dt class="col-sm-4">Tipo</dt><dd class="col-sm-8">{{ product.get_product_type_display }}</dd>
+        <dt class="col-sm-4">Unidad</dt><dd class="col-sm-8">{{ product.unit }}</dd>
+        <dt class="col-sm-4">Presentación</dt><dd class="col-sm-8">{{ product.presentation|default:"—" }}</dd>
+        <dt class="col-sm-4">Capacidad</dt><dd class="col-sm-8">{% if product.capacity_ml is not None %}{{ product.capacity_ml|number }} ml{% else %}—{% endif %}</dd>
+        <dt class="col-sm-4">Dimensiones</dt><dd class="col-sm-8">Alto {{ product.height_mm|number }} mm · Diámetro {{ product.diameter_mm|number }} mm</dd>
+        <dt class="col-sm-4">Peso</dt><dd class="col-sm-8">{% if product.weight_g is not None %}{{ product.weight_g|number }} g{% else %}—{% endif %}</dd>
+        {% if show_prices %}<dt class="col-sm-4">Precio de referencia</dt><dd class="col-sm-8">{% if product.reference_price is not None %}${{ product.reference_price|money:4 }} {{ product.currency }}{% else %}<span class="badge text-bg-warning">Sin precio</span>{% endif %}</dd>{% endif %}
+        <dt class="col-sm-4">Código Intelisis</dt><dd class="col-sm-8">{{ product.external_code|default:"—" }}</dd>
+        <dt class="col-sm-4">Descripción</dt><dd class="col-sm-8">{{ product.description|default:"—"|linebreaksbr }}</dd>
+      </dl>
+    </div>
+    <div class="card-footer bg-white small text-muted">
+      Creado {{ product.created_at|date:"d/m/Y H:i" }}{% if product.created_by %} por {{ product.created_by.username }}{% endif %} ·
+      Actualizado {{ product.updated_at|date:"d/m/Y H:i" }}{% if product.updated_by %} por {{ product.updated_by.username }}{% endif %}
+    </div></div>
+  </div>
+  {% if history is not None %}
+  <div class="col-lg-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-clock-history me-1 text-cyan"></i> Historial de cambios</div>
+      <ul class="list-group list-group-flush">
+        {% for entry in history %}
+          <li class="list-group-item small">
+            <div class="d-flex justify-content-between"><span class="badge badge-action-{{ entry.action }}">{{ entry.get_action_display }}</span><span class="text-muted">{{ entry.created_at|date:"d/m/Y H:i" }} · {{ entry.username }}</span></div>
+            {% for name, change in entry.changes.items %}<div class="mt-1"><strong>{{ name }}:</strong> <span class="text-danger">{{ change.antes|default_if_none:"—" }}</span> → <span class="text-success">{{ change.despues|default_if_none:"—" }}</span></div>{% endfor %}
+          </li>
+        {% empty %}<li class="list-group-item small text-muted">Sin cambios registrados.</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

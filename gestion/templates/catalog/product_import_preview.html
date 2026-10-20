@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Vista previa de importación{% endblock %}
+{% block page_title %}Catálogo de productos{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-1">Vista previa de importación</h1>
+<p class="text-muted small">Archivo: <strong>{{ pending.filename }}</strong> · {% if pending.update_existing %}Se actualizarán productos existentes{% else %}No se modificarán productos existentes{% endif %}</p>
+{% if pending.ignored_columns %}<div class="alert alert-warning small">Columnas no reconocidas (se ignorarán): {{ pending.ignored_columns|join:", " }}</div>{% endif %}
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><div class="kpi-value">{{ preview.to_create }}</div><div class="kpi-label">Nuevos</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><div class="kpi-value">{{ preview.to_update }}</div><div class="kpi-label">Por actualizar</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><div class="kpi-value">{{ preview.unchanged }}</div><div class="kpi-label">Sin cambios</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><div class="kpi-value {% if preview.errors %}text-danger{% endif %}">{{ preview.errors }}</div><div class="kpi-label">Con errores (se omiten)</div></div></div></div>
+</div>
+<div class="card border-0 shadow-sm mb-3"><div class="table-responsive">
+  <table class="table table-sm align-middle mb-0">
+    <thead><tr><th>Fila</th><th>Resultado</th><th>SKU</th><th>Nombre</th><th>Categoría</th><th>Detalle</th></tr></thead>
+    <tbody>
+    {% for row in preview.rows %}
+      <tr class="{% if row.action == 'error' %}row-error{% elif row.action == 'actualizar' %}row-update{% endif %}">
+        <td>{{ row.row }}</td>
+        <td class="text-nowrap">{% if row.action == "crear" %}<span class="badge text-bg-success">Nuevo</span>{% elif row.action == "actualizar" %}<span class="badge text-bg-primary">Actualizar</span>{% elif row.action == "sin_cambios" %}<span class="badge text-bg-light border">Sin cambios</span>{% else %}<span class="badge text-bg-danger">Error</span>{% endif %}</td>
+        <td class="fw-semibold">{{ row.values.sku }}</td>
+        <td>{{ row.values.nombre }}</td>
+        <td>{{ row.values.categoria }}</td>
+        <td class="small">
+          {% for error in row.errors %}<div class="text-danger"><i class="bi bi-x-circle me-1"></i>{{ error }}</div>{% endfor %}
+          {% for name, change in row.changes.items %}<div><strong>{{ name }}:</strong> <span class="text-danger">{{ change.antes|default_if_none:"—" }}</span> → <span class="text-success">{{ change.despues|default_if_none:"—" }}</span></div>{% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+<form method="post" class="d-flex flex-wrap gap-2" data-confirm="¿Confirmas la importación de {{ preview.applicable }} productos?">
+  {% csrf_token %}
+  <button type="submit" name="confirmar" class="btn btn-primary" {% if not preview.applicable %}disabled{% endif %}>
+    <i class="bi bi-check2-circle me-1"></i> Confirmar e importar {{ preview.applicable }} producto{{ preview.applicable|pluralize }}{% if preview.errors %} (omitir {{ preview.errors }} con errores){% endif %}
+  </button>
+  <button type="submit" name="cancelar" value="1" class="btn btn-outline-secondary" formnovalidate onclick="this.form.removeAttribute('data-confirm')">Cancelar</button>
+  <a href="{% url 'catalog:product_import' %}" class="btn btn-link">Cargar otro archivo</a>
+</form>
+{% endblock %}

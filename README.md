@@ -8,6 +8,11 @@ leads, newsletter, chatbot y panel de administración.
 Construido con **Python (FastAPI)** y frontend propio en HTML/CSS/JS, sin dependencias
 de framework frontend ni servicios externos obligatorios.
 
+> **Aplicación interna Django:** la carpeta [`gestion/`](gestion/README.md) contiene
+> *REMSA Gestión Comercial*, la aplicación interna multiusuario (Django 5) para catálogo,
+> clientes, cotizaciones e inventarios. Es independiente de este sitio y tiene su propia
+> instalación, base de datos y dependencias.
+
 ---
 
 ## 1. Qué incluye
