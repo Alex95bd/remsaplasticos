@@ -29,6 +29,12 @@
           <a class="nav-link {% nav_active 'quotes' %}" href="{% url 'quotes:quote_list' %}"><i class="bi bi-file-earmark-text"></i> Cotizaciones</a>
         {% endif %}
       {% endif %}
+      {% if perms.pricing.view_pricelist %}
+        <a class="nav-link {% nav_active 'pricing:pricelist_list' 'pricing:pricelist_detail' 'pricing:pricelist_create' 'pricing:pricelist_update' %}" href="{% url 'pricing:pricelist_list' %}"><i class="bi bi-tags-fill"></i> Listas de precios</a>
+        {% if perms.pricing.change_pricelistitem %}
+          <a class="nav-link {% nav_active 'pricing:dictation' %}" href="{% url 'pricing:dictation' %}"><i class="bi bi-mic"></i> Precios por voz</a>
+        {% endif %}
+      {% endif %}
       {% if perms.inventory.view_stock or perms.inventory.view_stockmovement or perms.inventory.view_warehouse %}
         <div class="nav-section">Inventario</div>
         {% if perms.inventory.view_stock %}

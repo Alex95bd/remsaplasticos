@@ -185,6 +185,9 @@ QUOTE_DEFAULT_VALIDITY_DAYS = int(env("QUOTE_DEFAULT_VALIDITY_DAYS", "15") or 15
 QUOTE_DEFAULT_TAX_RATE = env("QUOTE_DEFAULT_TAX_RATE", "16") or "16"
 QUOTE_MAX_DISCOUNT_PCT = env("QUOTE_MAX_DISCOUNT_PCT", "10") or "10"
 
+# Listas de precios: servicio externo de transcripción (vacío = solo navegador/texto).
+PRICING_TRANSCRIPTION_BACKEND = env("PRICING_TRANSCRIPTION_BACKEND", "")
+
 # Inventario: permitir existencias negativas (política explícita; por defecto no).
 INVENTORY_ALLOW_NEGATIVE = env_bool("INVENTORY_ALLOW_NEGATIVE", False)
 

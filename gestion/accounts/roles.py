@@ -32,6 +32,7 @@ ROLE_PERMISSIONS = {
         "crm.*",
         "quotes.*",
         "inventory.*",
+        "pricing.*",
         "audit.view_auditlog",
         "auth.view_group",
     ],
@@ -46,6 +47,10 @@ ROLE_PERMISSIONS = {
         "quotes.add_quote",
         "quotes.change_quote",
         "quotes.add_quotefollowup",
+        "pricing.view_pricelist",
+        "pricing.view_pricelistitem",
+        "pricing.view_pricechange",
+        "pricing.export_pricelist",
     ]
     + INVENTORY_READ,
     ROLE_WAREHOUSE: CATALOG_READ

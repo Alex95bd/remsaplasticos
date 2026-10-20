@@ -30,13 +30,26 @@ def can_edit(user, quote):
     return quote.owner_id == user.pk or user.has_perm("quotes.change_any_quote")
 
 
-def validate_line(user, product, unit_price, discount_pct):
-    """Valida precio y descuento contra el catálogo y los permisos del usuario. Devuelve el precio final."""
+def list_price(product, customer=None, quantity=None, currency=None):
+    """Precio vigente en listas (cliente o general) para la cantidad y moneda; None si no hay."""
+    from pricing.services import resolve_price
+
+    item = resolve_price(product, customer, quantity or Decimal("1"), currency=currency)
+    return item.unit_price if item else None
+
+
+def validate_line(user, product, unit_price, discount_pct, *, customer=None, quantity=None, currency=None):
+    """Valida precio y descuento contra la lista de precios o el catálogo y los permisos. Devuelve el precio final.
+
+    El precio mínimo permitido sin autorización es el de la lista vigente del cliente (o la general);
+    si no hay lista, el precio de referencia del catálogo.
+    """
     errors = []
-    reference = product.reference_price
+    from_list = list_price(product, customer, quantity, currency)
+    reference = from_list if from_list is not None else product.reference_price
     if unit_price is None:
         if reference is None:
-            errors.append("El producto no tiene precio de referencia: captura el precio unitario.")
+            errors.append("El producto no tiene precio de lista ni de referencia: captura el precio unitario.")
         unit_price = reference
     if unit_price is not None and unit_price < 0:
         errors.append("El precio no puede ser negativo.")
@@ -46,7 +59,8 @@ def validate_line(user, product, unit_price, discount_pct):
         and unit_price < reference
         and not user.has_perm("quotes.override_price")
     ):
-        errors.append(f"El precio no puede ser menor al de referencia (${reference:,.4f}) sin autorización.")
+        origin = "de lista" if from_list is not None else "de referencia"
+        errors.append(f"El precio no puede ser menor al {origin} (${reference:,.4f}) sin autorización.")
     if discount_pct > max_discount() and not user.has_perm("quotes.approve_discount"):
         errors.append(f"El descuento máximo sin autorización es {max_discount()}%.")
     if errors:

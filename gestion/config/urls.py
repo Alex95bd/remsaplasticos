@@ -15,6 +15,7 @@ urlpatterns = [
     path("clientes/", include("crm.urls")),
     path("cotizaciones/", include("quotes.urls")),
     path("inventario/", include("inventory.urls")),
+    path("precios/", include("pricing.urls")),
     path("bitacora/", include("audit.urls")),
     path("api/v1/", include("config.api_urls")),
     path(settings.DJANGO_ADMIN_URL, admin.site.urls),

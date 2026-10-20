@@ -151,7 +151,13 @@ class QuoteEditView(PermissionRequiredMixin, View):
     def post(self, request, pk=None):
         quote = self.get_quote()
         form = QuoteForm(request.POST, instance=quote)
-        formset = QuoteItemFormSet(request.POST, prefix="items", form_kwargs={"user": request.user})
+        cid = request.POST.get("customer") or ""
+        customer = Party.objects.filter(pk=int(cid)).first() if cid.isdigit() else None
+        formset = QuoteItemFormSet(
+            request.POST,
+            prefix="items",
+            form_kwargs={"user": request.user, "customer": customer, "currency": request.POST.get("currency")},
+        )
         if form.is_valid() and formset.is_valid():
             try:
                 quote = save_quote(

@@ -56,14 +56,14 @@ class QuoteItemForm(BootstrapFormMixin, forms.Form):
         decimal_places=4,
         min_value=0,
         required=False,
-        help_text="Vacío = precio de referencia.",
+        help_text="Vacío = precio de lista del cliente o, si no hay, de referencia.",
     )
     discount_pct = forms.DecimalField(
         label="Desc. %", max_digits=5, decimal_places=2, min_value=0, max_value=100, initial=0, required=False
     )
 
-    def __init__(self, *args, user=None, **kwargs):
-        self.user = user
+    def __init__(self, *args, user=None, customer=None, currency=None, **kwargs):
+        self.user, self.customer, self.currency = user, customer, currency
         super().__init__(*args, **kwargs)
         self.fields["product"].queryset = Product.objects.filter(is_active=True).select_related("unit")
 
@@ -74,7 +74,15 @@ class QuoteItemForm(BootstrapFormMixin, forms.Form):
             return data
         data["discount_pct"] = data.get("discount_pct") or Decimal("0")
         try:
-            data["unit_price"] = validate_line(self.user, product, data.get("unit_price"), data["discount_pct"])
+            data["unit_price"] = validate_line(
+                self.user,
+                product,
+                data.get("unit_price"),
+                data["discount_pct"],
+                customer=self.customer,
+                quantity=data["quantity"],
+                currency=self.currency,
+            )
         except ValidationError as exc:
             raise ValidationError(exc.messages) from exc
         return data
@@ -83,7 +91,8 @@ class QuoteItemForm(BootstrapFormMixin, forms.Form):
 class BaseQuoteItemFormSet(forms.BaseFormSet):
     def get_form_kwargs(self, index):
         kwargs = super().get_form_kwargs(index)
-        kwargs["user"] = self.form_kwargs.get("user")
+        for key in ("user", "customer", "currency"):
+            kwargs[key] = self.form_kwargs.get(key)
         return kwargs
 
     def clean(self):
