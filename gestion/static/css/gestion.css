@@ -29,7 +29,7 @@ body { background: var(--remsa-bg); color: #1f2d3d; }
   .sidebar { position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; overflow-y: auto; }
   .app-main { margin-left: var(--sidebar-width); }
 }
-.sidebar.offcanvas-lg { --bs-offcanvas-bg: var(--remsa-navy); --bs-offcanvas-width: var(--sidebar-width); }
+.sidebar.offcanvas-lg { --bs-offcanvas-bg: var(--remsa-navy); --bs-offcanvas-width: var(--sidebar-width); background-color: var(--remsa-navy) !important; }
 .sidebar-brand { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,.08); }
 .brand-mark { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: var(--remsa-cyan); color: var(--remsa-navy); font-size: 1.2rem; }
 .brand-text { color: #fff; font-weight: 700; line-height: 1.05; letter-spacing: .04em; }
