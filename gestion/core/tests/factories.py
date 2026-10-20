@@ -28,3 +28,9 @@ def make_product(sku="T-001", category=None, **extra):
     }
     data.update(extra)
     return Product.objects.create(sku=sku, **data)
+
+
+def make_party(name="Cliente de Prueba SA de CV", party_type="cliente", **extra):
+    from crm.models import Party
+
+    return Party.objects.create(name=name, party_type=party_type, **extra)

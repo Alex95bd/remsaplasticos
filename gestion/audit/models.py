@@ -19,6 +19,12 @@ class AuditLog(models.Model):
         PASSWORD_CHANGE = "password_change", "Cambio de contraseña"
         PASSWORD_SET = "password_set", "Contraseña asignada por administrador"
         PASSWORD_RESET = "password_reset", "Recuperación de contraseña"
+        STATUS_CHANGE = "status_change", "Cambio de estado"
+        DUPLICATE = "duplicate", "Duplicado"
+        PRINT = "print", "Impresión / PDF"
+        MOVEMENT = "movement", "Movimiento de inventario"
+        PRICE_CHANGE = "price_change", "Cambio de precios"
+        SYNC = "sync", "Sincronización"
 
     created_at = models.DateTimeField("fecha", auto_now_add=True, db_index=True)
     user = models.ForeignKey(

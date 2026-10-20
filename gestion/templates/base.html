@@ -20,6 +20,15 @@
     </div>
     <nav class="sidebar-nav">
       <a class="nav-link {% nav_active 'core:dashboard' %}" href="{% url 'core:dashboard' %}"><i class="bi bi-speedometer2"></i> Panel</a>
+      {% if perms.crm.view_party or perms.quotes.view_quote %}
+        <div class="nav-section">Comercial</div>
+        {% if perms.crm.view_party %}
+          <a class="nav-link {% nav_active 'crm' %}" href="{% url 'crm:party_list' %}"><i class="bi bi-person-vcard"></i> Clientes y proveedores</a>
+        {% endif %}
+        {% if perms.quotes.view_quote %}
+          <a class="nav-link {% nav_active 'quotes' %}" href="{% url 'quotes:quote_list' %}"><i class="bi bi-file-earmark-text"></i> Cotizaciones</a>
+        {% endif %}
+      {% endif %}
       {% if perms.catalog.view_product or perms.catalog.view_category or perms.catalog.view_unitofmeasure %}
         <div class="nav-section">Catálogo</div>
         {% if perms.catalog.view_product %}

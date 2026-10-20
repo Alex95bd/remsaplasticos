@@ -55,6 +55,12 @@ INSTALLED_APPS = [
     "accounts",
     "catalog",
     "audit",
+    "crm",
+    "quotes",
+    "inventory",
+    "pricing",
+    "agenda",
+    "integrations",
 ]
 
 MIDDLEWARE = [
@@ -170,6 +176,17 @@ if env_bool("DJANGO_BEHIND_PROXY", False):
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 CATALOG_IMPORT_MAX_ROWS = int(env("CATALOG_IMPORT_MAX_ROWS", "2000") or 2000)
+
+# Clientes y proveedores: campos que no pueden repetirse entre registros (rfc, nombre, correo).
+CRM_DUPLICATE_RULES = env_list("CRM_DUPLICATE_RULES", "rfc,nombre")
+
+# Cotizaciones
+QUOTE_DEFAULT_VALIDITY_DAYS = int(env("QUOTE_DEFAULT_VALIDITY_DAYS", "15") or 15)
+QUOTE_DEFAULT_TAX_RATE = env("QUOTE_DEFAULT_TAX_RATE", "16") or "16"
+QUOTE_MAX_DISCOUNT_PCT = env("QUOTE_MAX_DISCOUNT_PCT", "10") or "10"
+
+# Inventario: permitir existencias negativas (política explícita; por defecto no).
+INVENTORY_ALLOW_NEGATIVE = env_bool("INVENTORY_ALLOW_NEGATIVE", False)
 
 # Correo (recuperación de contraseña). En desarrollo se imprime en consola.
 EMAIL_BACKEND = env("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")

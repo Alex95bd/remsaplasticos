@@ -21,23 +21,39 @@ CATALOG_READ = [
     "catalog.view_unitofmeasure",
 ]
 
+CRM_READ = ["crm.view_party"]
+QUOTES_READ = ["quotes.view_quote", "quotes.view_quoteitem", "quotes.view_quotefollowup"]
+
 ROLE_PERMISSIONS = {
     ROLE_ADMIN: [
         "accounts.*",
         "catalog.*",
+        "crm.*",
+        "quotes.*",
         "audit.view_auditlog",
         "auth.view_group",
     ],
-    ROLE_SALES: CATALOG_READ + ["catalog.view_reference_price", "catalog.export_product"],
-    ROLE_WAREHOUSE: CATALOG_READ,
-    ROLE_READONLY: CATALOG_READ,
+    ROLE_SALES: CATALOG_READ
+    + CRM_READ
+    + QUOTES_READ
+    + [
+        "catalog.view_reference_price",
+        "catalog.export_product",
+        "crm.add_party",
+        "crm.change_party",
+        "quotes.add_quote",
+        "quotes.change_quote",
+        "quotes.add_quotefollowup",
+    ],
+    ROLE_WAREHOUSE: CATALOG_READ + CRM_READ,
+    ROLE_READONLY: CATALOG_READ + CRM_READ + QUOTES_READ,
 }
 
 ROLE_DESCRIPTIONS = {
-    ROLE_ADMIN: "Acceso completo, administración de usuarios, catálogo y bitácora.",
-    ROLE_SALES: "Consulta del catálogo con precios de referencia y exportación a Excel.",
-    ROLE_WAREHOUSE: "Consulta del catálogo sin precios. Inventarios en la Fase 3.",
-    ROLE_READONLY: "Solo lectura del catálogo, sin precios.",
+    ROLE_ADMIN: "Acceso completo: usuarios, catálogo, clientes, cotizaciones y bitácora.",
+    ROLE_SALES: "Clientes y cotizaciones propias; catálogo con precios de referencia y exportación.",
+    ROLE_WAREHOUSE: "Consulta del catálogo sin precios y del directorio de clientes/proveedores.",
+    ROLE_READONLY: "Solo lectura: catálogo sin precios, clientes y cotizaciones.",
 }
 
 ROLE_NAMES = list(ROLE_PERMISSIONS)

@@ -66,6 +66,7 @@ a.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(10
 
 .badge-action-create, .badge-action-activate, .badge-action-import { background: #d1f5e0; color: #116b3a; }
 .badge-action-update, .badge-action-export, .badge-action-password_change, .badge-action-password_set, .badge-action-password_reset { background: #dbeafe; color: #1e4fa3; }
+.badge-action-status_change, .badge-action-duplicate, .badge-action-print, .badge-action-movement, .badge-action-price_change, .badge-action-sync { background: #e0f7ff; color: #075b78; }
 .badge-action-deactivate, .badge-action-login_failed { background: #fde2e1; color: #a12622; }
 .badge-action-login, .badge-action-logout { background: #eef1f5; color: #4b5b6c; }
 

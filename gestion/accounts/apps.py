@@ -1,7 +1,18 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
-PROJECT_APPS = {"core", "accounts", "catalog", "audit"}
+PROJECT_APPS = {
+    "core",
+    "accounts",
+    "catalog",
+    "audit",
+    "crm",
+    "quotes",
+    "inventory",
+    "pricing",
+    "agenda",
+    "integrations",
+}
 
 
 def _sync_roles_after_migrate(sender, using="default", **kwargs):

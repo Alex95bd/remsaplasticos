@@ -1,0 +1,12 @@
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white fw-semibold"><i class="bi bi-clock-history me-1 text-cyan"></i> Historial de cambios</div>
+  <ul class="list-group list-group-flush">
+    {% for entry in history %}
+      <li class="list-group-item small">
+        <div class="d-flex justify-content-between gap-2"><span class="badge badge-action-{{ entry.action }}">{{ entry.get_action_display }}</span><span class="text-muted text-end">{{ entry.created_at|date:"d/m/Y H:i" }} · {{ entry.username }}</span></div>
+        {% if entry.message %}<div class="mt-1">{{ entry.message }}</div>{% endif %}
+        {% for name, change in entry.changes.items %}{% if change.antes is not None or change.despues is not None %}<div class="mt-1"><strong>{{ name }}:</strong> <span class="text-danger">{{ change.antes|default_if_none:"—" }}</span> → <span class="text-success">{{ change.despues|default_if_none:"—" }}</span></div>{% endif %}{% endfor %}
+      </li>
+    {% empty %}<li class="list-group-item small text-muted">Sin cambios registrados.</li>{% endfor %}
+  </ul>
+</div>
