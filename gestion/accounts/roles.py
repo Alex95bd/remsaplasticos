@@ -22,6 +22,7 @@ CATALOG_READ = [
 ]
 
 CRM_READ = ["crm.view_party"]
+INVENTORY_READ = ["inventory.view_stock", "inventory.view_warehouse", "inventory.view_location"]
 QUOTES_READ = ["quotes.view_quote", "quotes.view_quoteitem", "quotes.view_quotefollowup"]
 
 ROLE_PERMISSIONS = {
@@ -30,6 +31,7 @@ ROLE_PERMISSIONS = {
         "catalog.*",
         "crm.*",
         "quotes.*",
+        "inventory.*",
         "audit.view_auditlog",
         "auth.view_group",
     ],
@@ -44,15 +46,27 @@ ROLE_PERMISSIONS = {
         "quotes.add_quote",
         "quotes.change_quote",
         "quotes.add_quotefollowup",
+    ]
+    + INVENTORY_READ,
+    ROLE_WAREHOUSE: CATALOG_READ
+    + CRM_READ
+    + INVENTORY_READ
+    + [
+        "inventory.view_stockmovement",
+        "inventory.add_stockmovement",
+        "inventory.transfer_stock",
+        "inventory.change_stock",
+        "inventory.export_stock",
+        "inventory.add_location",
     ],
-    ROLE_WAREHOUSE: CATALOG_READ + CRM_READ,
-    ROLE_READONLY: CATALOG_READ + CRM_READ + QUOTES_READ,
+    ROLE_READONLY: CATALOG_READ + CRM_READ + QUOTES_READ + INVENTORY_READ,
 }
 
 ROLE_DESCRIPTIONS = {
-    ROLE_ADMIN: "Acceso completo: usuarios, catálogo, clientes, cotizaciones y bitácora.",
+    ROLE_ADMIN: "Acceso completo: usuarios, catálogo, clientes, cotizaciones, inventario (incluye ajustes) y bitácora.",
     ROLE_SALES: "Clientes y cotizaciones propias; catálogo con precios de referencia y exportación.",
-    ROLE_WAREHOUSE: "Consulta del catálogo sin precios y del directorio de clientes/proveedores.",
+    ROLE_WAREHOUSE: "Entradas, salidas, transferencias y stock mínimo; catálogo sin precios. "
+    "Los ajustes los autoriza Administrador.",
     ROLE_READONLY: "Solo lectura: catálogo sin precios, clientes y cotizaciones.",
 }
 

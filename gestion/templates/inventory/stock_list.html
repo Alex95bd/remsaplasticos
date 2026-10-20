@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}Existencias{% endblock %}
+{% block page_title %}Inventario{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 fw-bold text-navy mb-0">Existencias</h1>
+  {% include "inventory/_toolbar.html" %}
+</div>
+{% if low_count %}<div class="alert alert-warning d-flex justify-content-between align-items-center"><span><i class="bi bi-exclamation-triangle me-1"></i> {{ low_count }} existencia{{ low_count|pluralize }} en o por debajo del mínimo.</span><a href="?bajo=1" class="btn btn-sm btn-warning">Ver</a></div>{% endif %}
+<form class="card border-0 shadow-sm mb-3" method="get"><div class="card-body row g-2 align-items-end">
+  <div class="col-md-5"><label class="form-label small" for="q">Buscar</label><input type="search" class="form-control" id="q" name="q" value="{{ request.GET.q }}" placeholder="SKU o nombre"></div>
+  <div class="col-md-3"><label class="form-label small" for="almacen">Almacén</label><select class="form-select" id="almacen" name="almacen"><option value="">Todos</option>{% for w in warehouses %}<option value="{{ w.pk }}" {% if request.GET.almacen == w.pk|stringformat:"s" %}selected{% endif %}>{{ w }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" id="bajo" name="bajo" value="1" {% if request.GET.bajo %}checked{% endif %}><label class="form-check-label" for="bajo">Solo bajo mínimo</label></div></div>
+  <div class="col-md-2 d-flex gap-2"><button class="btn btn-outline-primary flex-fill" title="Filtrar"><i class="bi bi-funnel"></i></button>
+    {% if perms.inventory.export_stock %}<a class="btn btn-outline-success flex-fill" href="{% url 'inventory:stock_export' %}?{{ request.GET.urlencode }}" title="Exportar a Excel"><i class="bi bi-file-earmark-excel"></i></a>{% endif %}</div>
+</div></form>
+<div class="card border-0 shadow-sm"><div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>SKU</th><th>Producto</th><th>Almacén</th><th class="d-none d-md-table-cell">Ubicación</th><th class="text-end">Existencia</th><th class="text-end d-none d-sm-table-cell">Mínimo</th><th class="text-end">Acciones</th></tr></thead>
+    <tbody>
+    {% for s in stocks %}
+      <tr class="{% if s.is_low %}table-warning{% endif %}">
+        <td class="text-nowrap">{{ s.product.sku }}</td><td>{{ s.product.name }}</td><td>{{ s.warehouse.code }}</td>
+        <td class="d-none d-md-table-cell">{{ s.location.code|default:"—" }}</td>
+        <td class="text-end fw-semibold text-nowrap">{{ s.quantity|number }} <span class="small text-muted">{{ s.product.unit.code }}</span>{% if s.is_low %} <i class="bi bi-exclamation-triangle text-warning" title="Bajo mínimo"></i>{% endif %}</td>
+        <td class="text-end d-none d-sm-table-cell">{{ s.min_quantity|number }}</td>
+        <td class="text-end text-nowrap">
+          <a href="{% url 'inventory:movement_list' %}?q={{ s.product.sku|urlencode }}&almacen={{ s.warehouse.pk }}" class="btn btn-sm btn-outline-secondary" title="Movimientos"><i class="bi bi-clock-history"></i></a>
+          {% if perms.inventory.change_stock %}<a href="{% url 'inventory:stock_update' s.pk %}" class="btn btn-sm btn-outline-primary" title="Stock mínimo y ubicación"><i class="bi bi-sliders"></i></a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="text-center text-muted py-4">No hay existencias registradas. Se crean al registrar la primera entrada.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

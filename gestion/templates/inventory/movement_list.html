@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}Movimientos de inventario{% endblock %}
+{% block page_title %}Inventario{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 fw-bold text-navy mb-0">Movimientos</h1>
+  {% include "inventory/_toolbar.html" %}
+</div>
+<form class="card border-0 shadow-sm mb-3" method="get"><div class="card-body row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="q">Buscar</label><input type="search" class="form-control" id="q" name="q" value="{{ request.GET.q }}" placeholder="SKU, referencia o motivo"></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="almacen">Almacén</label><select class="form-select" id="almacen" name="almacen"><option value="">Todos</option>{% for w in warehouses %}<option value="{{ w.pk }}" {% if request.GET.almacen == w.pk|stringformat:"s" %}selected{% endif %}>{{ w.code }}</option>{% endfor %}</select></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="tipo">Tipo</label><select class="form-select" id="tipo" name="tipo"><option value="">Todos</option>{% for v, l in kinds %}<option value="{{ v }}" {% if request.GET.tipo == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="desde">Desde</label><input type="date" class="form-control" id="desde" name="desde" value="{{ request.GET.desde }}"></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="hasta">Hasta</label><input type="date" class="form-control" id="hasta" name="hasta" value="{{ request.GET.hasta }}"></div>
+  <div class="col-md-1 d-grid"><button class="btn btn-outline-primary" title="Filtrar"><i class="bi bi-funnel"></i></button></div>
+</div></form>
+<div class="card border-0 shadow-sm"><div class="table-responsive">
+  <table class="table table-hover table-sm align-middle mb-0">
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>SKU</th><th>Almacén</th><th class="text-end">Cantidad</th><th class="text-end">Saldo</th><th class="d-none d-lg-table-cell">Motivo / referencia</th><th class="d-none d-md-table-cell">Responsable</th></tr></thead>
+    <tbody>
+    {% for m in movements %}
+      <tr>
+        <td class="text-nowrap"><a href="{% url 'inventory:movement_detail' m.pk %}">{{ m.created_at|date:"d/m/Y H:i" }}</a></td>
+        <td class="small">{{ m.get_kind_display }}</td><td class="text-nowrap">{{ m.product.sku }}</td><td>{{ m.warehouse.code }}</td>
+        <td class="text-end {% if m.quantity < 0 %}text-danger{% else %}text-success{% endif %}">{% if m.quantity > 0 %}+{% endif %}{{ m.quantity|number }}</td>
+        <td class="text-end">{{ m.balance_after|number }}</td>
+        <td class="d-none d-lg-table-cell small">{{ m.reason }}{% if m.reference %} · <span class="text-muted">{{ m.reference }}</span>{% endif %}</td>
+        <td class="d-none d-md-table-cell small">{{ m.user.username }}</td>
+      </tr>
+    {% empty %}<tr><td colspan="8" class="text-center text-muted py-4">Sin movimientos.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

@@ -29,6 +29,18 @@
           <a class="nav-link {% nav_active 'quotes' %}" href="{% url 'quotes:quote_list' %}"><i class="bi bi-file-earmark-text"></i> Cotizaciones</a>
         {% endif %}
       {% endif %}
+      {% if perms.inventory.view_stock or perms.inventory.view_stockmovement or perms.inventory.view_warehouse %}
+        <div class="nav-section">Inventario</div>
+        {% if perms.inventory.view_stock %}
+          <a class="nav-link {% nav_active 'inventory:stock_list' 'inventory:stock_update' %}" href="{% url 'inventory:stock_list' %}"><i class="bi bi-box-seam"></i> Existencias</a>
+        {% endif %}
+        {% if perms.inventory.view_stockmovement %}
+          <a class="nav-link {% nav_active 'inventory:movement_list' 'inventory:movement_detail' 'inventory:movement_create' 'inventory:adjustment_create' 'inventory:transfer_create' %}" href="{% url 'inventory:movement_list' %}"><i class="bi bi-arrow-down-up"></i> Movimientos</a>
+        {% endif %}
+        {% if perms.inventory.view_warehouse %}
+          <a class="nav-link {% nav_active 'inventory:warehouse_list' 'inventory:warehouse_detail' 'inventory:warehouse_create' 'inventory:warehouse_update' %}" href="{% url 'inventory:warehouse_list' %}"><i class="bi bi-building"></i> Almacenes</a>
+        {% endif %}
+      {% endif %}
       {% if perms.catalog.view_product or perms.catalog.view_category or perms.catalog.view_unitofmeasure %}
         <div class="nav-section">Catálogo</div>
         {% if perms.catalog.view_product %}

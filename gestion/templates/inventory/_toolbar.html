@@ -1,0 +1,5 @@
+<div class="d-flex flex-wrap gap-2">
+  {% if perms.inventory.add_stockmovement %}<a href="{% url 'inventory:movement_create' %}" class="btn btn-primary"><i class="bi bi-plus-slash-minus me-1"></i> Entrada / salida</a>{% endif %}
+  {% if perms.inventory.transfer_stock %}<a href="{% url 'inventory:transfer_create' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-left-right me-1"></i> Transferir</a>{% endif %}
+  {% if perms.inventory.authorize_adjustment %}<a href="{% url 'inventory:adjustment_create' %}" class="btn btn-outline-primary"><i class="bi bi-clipboard-check me-1"></i> Ajuste</a>{% endif %}
+</div>
