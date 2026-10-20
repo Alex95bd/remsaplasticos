@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar {{ object.name }}{% else %}Nuevo cliente / proveedor{% endif %}{% endblock %}
+{% block page_title %}Clientes y proveedores{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">{% if object %}Editar {{ object.name }}{% else %}Nuevo cliente / proveedor{% endif %}</h1>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% include "partials/form_errors.html" %}
+  <div class="row g-3">
+    <div class="col-xl-6"><div class="card border-0 shadow-sm h-100"><div class="card-body"><h2 class="h6 fw-semibold mb-3">Datos generales</h2><div class="row">
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.party_type %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.person_type %}</div>
+      <div class="col-12">{% include "partials/form_field.html" with field=form.name %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.trade_name %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.rfc %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.tax_regime %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.external_code %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.contact_name %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.contact_position %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.phone %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.email %}</div>
+      <div class="col-12">{% include "partials/form_field.html" with field=form.is_active %}</div>
+    </div></div></div></div>
+    <div class="col-xl-6"><div class="card border-0 shadow-sm h-100"><div class="card-body"><h2 class="h6 fw-semibold mb-3">Direcciones y condiciones</h2><div class="row">
+      <div class="col-md-9">{% include "partials/form_field.html" with field=form.fiscal_address %}</div>
+      <div class="col-md-3">{% include "partials/form_field.html" with field=form.fiscal_postal_code %}</div>
+      <div class="col-12">{% include "partials/form_field.html" with field=form.commercial_address %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.payment_terms_days %}</div>
+      <div class="col-md-6">{% include "partials/form_field.html" with field=form.credit_limit %}</div>
+      <div class="col-12">{% include "partials/form_field.html" with field=form.commercial_conditions %}</div>
+      <div class="col-12">{% include "partials/form_field.html" with field=form.notes %}</div>
+    </div></div></div></div>
+  </div>
+  <div class="d-flex gap-2 mt-3">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar</button>
+    <a href="{% if object %}{% url 'crm:party_detail' object.pk %}{% else %}{% url 'crm:party_list' %}{% endif %}" class="btn btn-outline-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

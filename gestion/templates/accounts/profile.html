@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil{% endblock %}
+{% block page_title %}Mi perfil{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">Mi perfil</h1>
+<div class="row g-3">
+  <div class="col-lg-7"><div class="card border-0 shadow-sm"><div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/form_fields.html" %}
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar</button>
+    </form>
+  </div></div></div>
+  <div class="col-lg-5"><div class="card border-0 shadow-sm"><div class="card-body small">
+    <dl class="mb-0">
+      <dt>Usuario</dt><dd>{{ user.username }}</dd>
+      <dt>Puesto</dt><dd>{{ user.job_title|default:"—" }}</dd>
+      <dt>Roles</dt><dd>{% for g in user.groups.all %}<span class="badge text-bg-light border me-1">{{ g.name }}</span>{% empty %}{% if user.is_superuser %}Superusuario{% else %}Sin rol asignado{% endif %}{% endfor %}</dd>
+      <dt>Último acceso</dt><dd class="mb-0">{{ user.last_login|default:"—" }}</dd>
+    </dl>
+    <p class="text-muted mt-3 mb-0">Tus roles y tu puesto los asigna un administrador.</p>
+  </div></div></div>
+</div>
+{% endblock %}

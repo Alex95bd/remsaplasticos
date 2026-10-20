@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block page_title %}Usuarios{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 fw-bold text-navy mb-0">Usuarios</h1>
+  {% if perms.accounts.add_user %}<a href="{% url 'accounts:user_create' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i> Nuevo usuario</a>{% endif %}
+</div>
+<form class="card border-0 shadow-sm mb-3" method="get">
+  <div class="card-body row g-2 align-items-end">
+    <div class="col-md-5"><label class="form-label small" for="q">Buscar</label>
+      <input type="search" class="form-control" id="q" name="q" value="{{ request.GET.q }}" placeholder="Usuario, nombre o correo"></div>
+    <div class="col-6 col-md-3"><label class="form-label small" for="rol">Rol</label>
+      <select class="form-select" id="rol" name="rol"><option value="">Todos</option>
+        {% for role in roles %}<option value="{{ role.name }}" {% if request.GET.rol == role.name %}selected{% endif %}>{{ role.name }}</option>{% endfor %}
+      </select></div>
+    <div class="col-6 col-md-2"><label class="form-label small" for="estado">Estado</label>
+      <select class="form-select" id="estado" name="estado">
+        <option value="activos" {% if estado == "activos" %}selected{% endif %}>Activos</option>
+        <option value="inactivos" {% if estado == "inactivos" %}selected{% endif %}>Inactivos</option>
+        <option value="todos" {% if estado == "todos" %}selected{% endif %}>Todos</option>
+      </select></div>
+    <div class="col-md-2 d-grid"><button class="btn btn-outline-primary"><i class="bi bi-funnel me-1"></i> Filtrar</button></div>
+  </div>
+</form>
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead><tr><th>Usuario</th><th>Nombre</th><th class="d-none d-md-table-cell">Correo</th><th>Roles</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td class="fw-semibold">{{ u.username }}{% if u.is_superuser %} <span class="badge text-bg-dark">Superusuario</span>{% endif %}</td>
+          <td>{{ u.get_full_name|default:"—" }}<div class="small text-muted">{{ u.job_title }}</div></td>
+          <td class="d-none d-md-table-cell">{{ u.email }}</td>
+          <td>{% for g in u.groups.all %}<span class="badge text-bg-light border me-1">{{ g.name }}</span>{% empty %}<span class="text-muted small">Sin rol</span>{% endfor %}</td>
+          <td>{% if u.is_active %}<span class="badge text-bg-success">Activo</span>{% else %}<span class="badge text-bg-secondary">Inactivo</span>{% endif %}</td>
+          <td class="text-end text-nowrap">
+            {% if perms.accounts.change_user and not u.is_superuser or perms.accounts.change_user and user.is_superuser %}
+              <a href="{% url 'accounts:user_update' u.pk %}" class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'accounts:user_set_password' u.pk %}" class="btn btn-sm btn-outline-secondary" title="Asignar contraseña"><i class="bi bi-key"></i></a>
+              {% if u.pk != user.pk %}
+              <form method="post" action="{% url 'accounts:user_toggle_active' u.pk %}" class="d-inline" data-confirm="{% if u.is_active %}¿Desactivar a {{ u.username }}? No podrá iniciar sesión.{% else %}¿Activar a {{ u.username }}?{% endif %}">
+                {% csrf_token %}
+                <button class="btn btn-sm {% if u.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}" title="{% if u.is_active %}Desactivar{% else %}Activar{% endif %}"><i class="bi {% if u.is_active %}bi-person-dash{% else %}bi-person-check{% endif %}"></i></button>
+              </form>
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No hay usuarios que coincidan con la búsqueda.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include "partials/pagination.html" %}
+<div class="card border-0 shadow-sm mt-4">
+  <div class="card-header bg-white fw-semibold">Roles disponibles</div>
+  <ul class="list-group list-group-flush small">
+    {% for name, description in role_descriptions.items %}<li class="list-group-item"><strong>{{ name }}:</strong> {{ description }}</li>{% endfor %}
+  </ul>
+</div>
+{% endblock %}

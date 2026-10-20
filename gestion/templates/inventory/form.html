@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}Inventario{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-xl-7 col-lg-9">
+  <a href="{% url 'inventory:stock_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Existencias</a>
+  <h1 class="h4 fw-bold text-navy mb-3 mt-1"><i class="bi {{ icon|default:'bi-box-seam' }} me-1 text-cyan"></i> {{ title }}</h1>
+  <form method="post" novalidate class="card border-0 shadow-sm"><div class="card-body">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <div class="d-flex gap-2"><button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a></div>
+  </div></form>
+</div></div>
+{% endblock %}

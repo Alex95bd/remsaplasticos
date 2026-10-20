@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}{{ party.name }}{% endblock %}
+{% block page_title %}Clientes y proveedores{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <a href="{% url 'crm:party_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Clientes y proveedores</a>
+    <h1 class="h4 fw-bold text-navy mb-0 mt-1">{{ party.name }}</h1>
+    <div class="text-muted">{{ party.get_party_type_display }} · {{ party.get_person_type_display }} {% if party.is_active %}<span class="badge text-bg-success ms-1">Activo</span>{% else %}<span class="badge text-bg-secondary ms-1">Inactivo</span>{% endif %}</div>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    {% if perms.quotes.add_quote and party.is_customer and party.is_active %}<a href="{% url 'quotes:quote_create' %}?cliente={{ party.pk }}" class="btn btn-outline-primary"><i class="bi bi-file-earmark-plus me-1"></i> Nueva cotización</a>{% endif %}
+    {% if perms.crm.change_party %}
+      <a href="{% url 'crm:party_update' party.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i> Editar</a>
+      <form method="post" action="{% url 'crm:party_toggle_active' party.pk %}" data-confirm="{% if party.is_active %}¿Desactivar este registro?{% else %}¿Activar este registro?{% endif %}">{% csrf_token %}
+        <button class="btn {% if party.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">{% if party.is_active %}Desactivar{% else %}Activar{% endif %}</button></form>
+    {% endif %}
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm mb-3"><div class="card-body"><dl class="row mb-0">
+      <dt class="col-sm-4">Nombre comercial</dt><dd class="col-sm-8">{{ party.trade_name|default:"—" }}</dd>
+      <dt class="col-sm-4">RFC</dt><dd class="col-sm-8">{{ party.rfc|default:"—" }}</dd>
+      <dt class="col-sm-4">Régimen fiscal</dt><dd class="col-sm-8">{{ party.tax_regime|default:"—" }}</dd>
+      <dt class="col-sm-4">Contacto</dt><dd class="col-sm-8">{{ party.contact_name|default:"—" }}{% if party.contact_position %} · {{ party.contact_position }}{% endif %}</dd>
+      <dt class="col-sm-4">Teléfono</dt><dd class="col-sm-8">{{ party.phone|default:"—" }}</dd>
+      <dt class="col-sm-4">Correo</dt><dd class="col-sm-8">{% if party.email %}<a href="mailto:{{ party.email }}">{{ party.email }}</a>{% else %}—{% endif %}</dd>
+      <dt class="col-sm-4">Dirección fiscal</dt><dd class="col-sm-8">{{ party.fiscal_address|default:"—"|linebreaksbr }}{% if party.fiscal_postal_code %} · C.P. {{ party.fiscal_postal_code }}{% endif %}</dd>
+      <dt class="col-sm-4">Dirección comercial</dt><dd class="col-sm-8">{{ party.commercial_address|default:"—"|linebreaksbr }}</dd>
+      <dt class="col-sm-4">Crédito</dt><dd class="col-sm-8">{{ party.payment_terms_days }} días{% if party.credit_limit is not None %} · límite ${{ party.credit_limit|money }}{% endif %}</dd>
+      <dt class="col-sm-4">Condiciones</dt><dd class="col-sm-8">{{ party.commercial_conditions|default:"—"|linebreaksbr }}</dd>
+      <dt class="col-sm-4">Notas internas</dt><dd class="col-sm-8">{{ party.notes|default:"—"|linebreaksbr }}</dd>
+      <dt class="col-sm-4">Código Intelisis</dt><dd class="col-sm-8">{{ party.external_code|default:"—" }}</dd>
+    </dl></div></div>
+    {% if quotes is not None %}
+    <div class="card border-0 shadow-sm mb-3"><div class="card-header bg-white fw-semibold"><i class="bi bi-file-earmark-text me-1 text-cyan"></i> Cotizaciones recientes</div>
+      <div class="table-responsive"><table class="table table-sm align-middle mb-0"><tbody>
+      {% for q in quotes %}<tr><td><a href="{% url 'quotes:quote_detail' q.pk %}">{{ q.folio }}</a></td><td class="small">{{ q.created_at|date:"d/m/Y" }}</td><td>{% include "quotes/_status_badge.html" with quote=q %}</td><td class="text-end">${{ q.total|money }} {{ q.currency }}</td></tr>
+      {% empty %}<tr><td class="text-muted small p-3">Sin cotizaciones.</td></tr>{% endfor %}
+      </tbody></table></div></div>
+    {% endif %}
+    {% if events is not None %}
+    <div class="card border-0 shadow-sm"><div class="card-header bg-white fw-semibold"><i class="bi bi-calendar3 me-1 text-cyan"></i> Agenda</div>
+      <ul class="list-group list-group-flush">{% for e in events %}<li class="list-group-item small"><a href="{% url 'agenda:event_detail' e.pk %}">{{ e.title }}</a> · {{ e.start|date:"d/m/Y H:i" }} · {{ e.get_status_display }}</li>{% empty %}<li class="list-group-item small text-muted">Sin eventos.</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+  {% if history is not None %}
+  <div class="col-lg-5">{% include "partials/history.html" %}</div>
+  {% endif %}
+</div>
+{% endblock %}

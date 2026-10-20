@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Bitácora{% endblock %}
+{% block page_title %}Bitácora{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-1">Bitácora de acciones</h1>
+<p class="text-muted small">Registro de solo lectura: las entradas no se pueden editar ni eliminar desde la aplicación.</p>
+<form class="card border-0 shadow-sm mb-3" method="get">
+  <div class="card-body row g-2 align-items-end">
+    <div class="col-md-4"><label class="form-label small" for="q">Buscar</label>
+      <input type="search" class="form-control" id="q" name="q" value="{{ request.GET.q }}" placeholder="Usuario, registro o detalle"></div>
+    <div class="col-md-3"><label class="form-label small" for="accion">Acción</label>
+      <select class="form-select" id="accion" name="accion"><option value="">Todas</option>
+        {% for value, label in actions %}<option value="{{ value }}" {% if request.GET.accion == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select></div>
+    <div class="col-6 col-md-2"><label class="form-label small" for="desde">Desde</label><input type="date" class="form-control" id="desde" name="desde" value="{{ request.GET.desde }}"></div>
+    <div class="col-6 col-md-2"><label class="form-label small" for="hasta">Hasta</label><input type="date" class="form-control" id="hasta" name="hasta" value="{{ request.GET.hasta }}"></div>
+    <div class="col-md-1 d-grid"><button class="btn btn-outline-primary" title="Filtrar"><i class="bi bi-funnel"></i></button></div>
+  </div>
+</form>
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover align-middle mb-0">
+      <thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Registro / detalle</th><th class="d-none d-lg-table-cell">IP</th></tr></thead>
+      <tbody>
+      {% for entry in entries %}
+        <tr>
+          <td class="text-nowrap small">{{ entry.created_at|date:"d/m/Y H:i:s" }}</td>
+          <td>{{ entry.username|default:"—" }}</td>
+          <td><span class="badge badge-action-{{ entry.action }}">{{ entry.get_action_display }}</span></td>
+          <td class="small">
+            {% if entry.content_type %}<span class="text-muted">{{ entry.content_type.name|capfirst }}:</span> {% endif %}{{ entry.object_repr }}
+            {% if entry.message %}<div class="text-muted">{{ entry.message }}</div>{% endif %}
+            {% if entry.changes %}
+              <details class="mt-1"><summary class="text-cyan">Ver cambios</summary>
+                <table class="table table-sm table-bordered mt-1 mb-0 changes-table">
+                  {% for name, change in entry.changes.items %}
+                    <tr><th class="w-25">{{ name }}</th>
+                      {% if change.antes is not None or change.despues is not None %}<td class="text-danger">{{ change.antes|default_if_none:"—" }}</td><td class="text-success">{{ change.despues|default_if_none:"—" }}</td>
+                      {% else %}<td colspan="2">{{ change }}</td>{% endif %}</tr>
+                  {% endfor %}
+                </table>
+              </details>
+            {% endif %}
+          </td>
+          <td class="d-none d-lg-table-cell small text-muted">{{ entry.ip_address|default:"" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No hay registros con estos filtros.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}

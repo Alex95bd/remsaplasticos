@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Importar productos{% endblock %}
+{% block page_title %}Catálogo de productos{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">Importar productos desde Excel</h1>
+<div class="row g-3">
+  <div class="col-lg-7"><div class="card border-0 shadow-sm"><div class="card-body">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% include "partials/form_fields.html" %}
+      <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Revisar archivo</button>
+      <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+  </div></div></div>
+  <div class="col-lg-5"><div class="card border-0 shadow-sm"><div class="card-body small">
+    <h2 class="h6 fw-semibold">Cómo funciona</h2>
+    <ol class="ps-3 mb-3">
+      <li>Descarga la plantilla y llena una fila por producto.</li>
+      <li>Carga el archivo: se validan columnas, categorías, unidades, números y duplicados.</li>
+      <li>Revisa la vista previa. <strong>Nada se guarda</strong> hasta que confirmes.</li>
+    </ol>
+    <p class="mb-2">Columnas obligatorias: <code>sku</code>, <code>nombre</code>, <code>categoria</code>, <code>unidad</code>.</p>
+    <a href="{% url 'catalog:product_import_template' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-download me-1"></i> Descargar plantilla</a>
+  </div></div></div>
+</div>
+{% endblock %}

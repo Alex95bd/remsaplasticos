@@ -1,0 +1,16 @@
+{% if is_paginated %}
+<nav class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mt-3" aria-label="Paginación">
+  <span class="text-muted small">Mostrando {{ page_obj.start_index }}–{{ page_obj.end_index }} de {{ paginator.count }}</span>
+  <ul class="pagination pagination-sm mb-0">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="{% querystring page=1 %}" aria-label="Primera">&laquo;</a></li>
+      <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.previous_page_number %}">Anterior</a></li>
+    {% endif %}
+    <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.next_page_number %}">Siguiente</a></li>
+      <li class="page-item"><a class="page-link" href="{% querystring page=paginator.num_pages %}" aria-label="Última">&raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

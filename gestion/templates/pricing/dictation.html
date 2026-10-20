@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static gestion %}
+{% block title %}Captura de precios por voz{% endblock %}
+{% block page_title %}Listas de precios{% endblock %}
+{% block content %}
+<a href="{% url 'pricing:pricelist_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Listas de precios</a>
+<h1 class="h4 fw-bold text-navy mb-2 mt-1"><i class="bi bi-mic me-1 text-cyan"></i> Captura de precios por voz</h1>
+<ol class="steps small text-muted mb-3 ps-3">
+  <li class="{% if step == 'capture' %}fw-semibold text-navy{% endif %}">Dictar o escribir</li>
+  <li class="{% if step == 'review' %}fw-semibold text-navy{% endif %}">Revisar y corregir</li>
+  <li class="{% if step == 'preview' %}fw-semibold text-navy{% endif %}">Confirmar cambio</li>
+</ol>
+<div class="row"><div class="col-xl-8">
+{% if step == "capture" %}
+  <form method="post" class="card border-0 shadow-sm" id="dictation-form">{% csrf_token %}<div class="card-body">
+    <input type="hidden" name="step" value="interpret">
+    <div id="speech-box" class="mb-3 d-none">
+      <button type="button" class="btn btn-primary" id="mic-btn"><i class="bi bi-mic-fill me-1"></i> <span>Iniciar dictado</span></button>
+      <span id="mic-status" class="small text-muted ms-2" aria-live="polite"></span>
+    </div>
+    <div id="speech-unsupported" class="alert alert-light border small d-none"><i class="bi bi-info-circle me-1"></i>Este navegador no permite dictado por voz. Escribe el texto (o usa el dictado del teclado de tu teléfono).</div>
+    {% include "partials/form_fields.html" with form=dictation_form %}
+    <div class="form-text mb-3">Ejemplo: «BOT-500 a 3 pesos con 50 centavos, mínimo mil piezas, lista mayoreo, vigente hasta el 31 de diciembre».</div>
+    <button class="btn btn-primary"><i class="bi bi-magic me-1"></i> Interpretar</button>
+  </div></form>
+{% elif step == "review" %}
+  <form method="post" class="card border-0 shadow-sm">{% csrf_token %}<div class="card-body">
+    <input type="hidden" name="step" value="preview">
+    {% if parsed %}<div class="alert alert-light border small"><strong>Transcripción:</strong> «{{ parsed.transcript }}»</div>{% endif %}
+    {% for w in warnings %}<div class="alert alert-warning small py-2"><i class="bi bi-exclamation-triangle me-1"></i>{{ w }}</div>{% endfor %}
+    {% if candidates %}<div class="small mb-3"><strong>Productos posibles:</strong> {% for c in candidates %}<span class="badge text-bg-light border">{{ c.sku }} · {{ c.name }}</span> {% endfor %}</div>{% endif %}
+    {% include "partials/form_fields.html" %}
+    <div class="d-flex gap-2"><button class="btn btn-primary">Ver vista previa</button><a href="{% url 'pricing:dictation' %}" class="btn btn-outline-secondary">Empezar de nuevo</a></div>
+  </div></form>
+{% elif step == "preview" %}
+  <div class="card border-0 shadow-sm"><div class="card-body">
+    <h2 class="h6 fw-semibold">Vista previa del cambio</h2>
+    {% for w in warnings %}<div class="alert alert-warning small py-2"><i class="bi bi-exclamation-triangle me-1"></i>{{ w }}</div>{% endfor %}
+    <table class="table table-sm"><tbody>
+      <tr><th>Lista</th><td>{{ data.price_list }} ({{ data.price_list.currency }})</td></tr>
+      <tr><th>Producto</th><td>{{ data.product.sku }} · {{ data.product.name }}</td></tr>
+      <tr><th>Cantidad mínima</th><td>{{ data.min_quantity|number }} {{ data.product.unit.code }}</td></tr>
+      <tr><th>Precio actual</th><td>{% if current %}${{ current.unit_price|money:4 }}{% else %}<span class="text-muted">Sin precio (se creará)</span>{% endif %}</td></tr>
+      <tr><th>Precio nuevo</th><td class="fw-bold text-success">${{ data.unit_price|money:4 }}</td></tr>
+      {% if data.transcript %}<tr><th>Transcripción</th><td class="fst-italic">«{{ data.transcript }}»</td></tr>{% endif %}
+    </tbody></table>
+    <form method="post" class="d-inline">{% csrf_token %}<input type="hidden" name="step" value="confirm">{% for f in form %}<input type="hidden" name="{{ f.html_name }}" value="{{ f.value|default_if_none:'' }}">{% endfor %}
+      <button class="btn btn-success"><i class="bi bi-check2-circle me-1"></i> Confirmar y guardar</button></form>
+    <form method="post" class="d-inline">{% csrf_token %}{% for f in form %}<input type="hidden" name="{{ f.html_name }}" value="{{ f.value|default_if_none:'' }}">{% endfor %}
+      <button class="btn btn-outline-secondary" name="step" value="review">Corregir</button></form>
+  </div></div>
+{% endif %}
+</div></div>
+{% endblock %}
+{% block scripts %}{% if step == "capture" %}<script src="{% static 'js/dictation.js' %}"></script>{% endif %}{% endblock %}

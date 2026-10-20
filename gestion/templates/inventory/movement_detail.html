@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}Movimiento {{ movement.pk }}{% endblock %}
+{% block page_title %}Inventario{% endblock %}
+{% block content %}
+<a href="{% url 'inventory:movement_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Movimientos</a>
+<h1 class="h4 fw-bold text-navy mb-3 mt-1">{{ movement.get_kind_display }} · {{ movement.product.sku }}</h1>
+<div class="row g-3">
+  <div class="col-lg-7"><div class="card border-0 shadow-sm"><div class="card-body"><dl class="row mb-0">
+    <dt class="col-sm-4">Fecha</dt><dd class="col-sm-8">{{ movement.created_at|date:"d/m/Y H:i:s" }}</dd>
+    <dt class="col-sm-4">Producto</dt><dd class="col-sm-8">{{ movement.product.sku }} · {{ movement.product.name }}</dd>
+    <dt class="col-sm-4">Almacén</dt><dd class="col-sm-8">{{ movement.warehouse }}{% if movement.location %} / {{ movement.location.code }}{% endif %}</dd>
+    <dt class="col-sm-4">Cantidad</dt><dd class="col-sm-8 fw-semibold">{% if movement.quantity > 0 %}+{% endif %}{{ movement.quantity|number }}</dd>
+    <dt class="col-sm-4">Existencia resultante</dt><dd class="col-sm-8">{{ movement.balance_after|number }}</dd>
+    <dt class="col-sm-4">Responsable</dt><dd class="col-sm-8">{{ movement.user.get_full_name|default:movement.user.username }}</dd>
+    {% if movement.authorized_by %}<dt class="col-sm-4">Autorizó</dt><dd class="col-sm-8">{{ movement.authorized_by.username }}</dd>{% endif %}
+    <dt class="col-sm-4">Motivo</dt><dd class="col-sm-8">{{ movement.reason }}</dd>
+    <dt class="col-sm-4">Referencia</dt><dd class="col-sm-8">{{ movement.reference|default:"—" }}</dd>
+    <dt class="col-sm-4">Observaciones</dt><dd class="col-sm-8">{{ movement.notes|default:"—"|linebreaksbr }}</dd>
+    {% if movement.reverses %}<dt class="col-sm-4">Cancela a</dt><dd class="col-sm-8"><a href="{% url 'inventory:movement_detail' movement.reverses.pk %}">Movimiento #{{ movement.reverses.pk }}</a></dd>{% endif %}
+    {% if reversal %}<dt class="col-sm-4">Cancelado por</dt><dd class="col-sm-8"><a href="{% url 'inventory:movement_detail' reversal.pk %}">Movimiento #{{ reversal.pk }}</a></dd>{% endif %}
+    {% for s in siblings %}<dt class="col-sm-4">Contrapartida</dt><dd class="col-sm-8"><a href="{% url 'inventory:movement_detail' s.pk %}">{{ s.get_kind_display }} en {{ s.warehouse.code }}</a></dd>{% endfor %}
+  </dl></div></div>
+  <p class="small text-muted mt-2"><i class="bi bi-lock me-1"></i>Los movimientos no se editan ni se eliminan; las correcciones se registran como movimiento inverso.</p></div>
+  {% if can_reverse %}<div class="col-lg-5"><div class="card border-0 shadow-sm"><div class="card-body">
+    <h2 class="h6 fw-semibold">Cancelar con movimiento inverso</h2>
+    <form method="post" action="{% url 'inventory:movement_reverse' movement.pk %}" data-confirm="Se registrará un movimiento de signo contrario. ¿Continuar?">{% csrf_token %}
+      {{ reverse_form.reason }}<button class="btn btn-outline-danger btn-sm mt-2">Cancelar movimiento</button></form>
+  </div></div></div>{% endif %}
+</div>
+{% endblock %}

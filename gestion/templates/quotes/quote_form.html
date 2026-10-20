@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}{% if quote.pk %}Editar {{ quote.folio }}{% else %}Nueva cotización{% endif %}{% endblock %}
+{% block page_title %}Cotizaciones{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">{% if quote.pk %}Editar {{ quote.folio }}{% else %}Nueva cotización{% endif %}</h1>
+<form method="post" novalidate id="quote-form">
+  {% csrf_token %}
+  {% include "partials/form_errors.html" %}
+  <div class="card border-0 shadow-sm mb-3"><div class="card-body"><div class="row">
+    <div class="col-md-6">{% include "partials/form_field.html" with field=form.customer %}</div>
+    <div class="col-6 col-md-2">{% include "partials/form_field.html" with field=form.valid_until %}</div>
+    <div class="col-6 col-md-2">{% include "partials/form_field.html" with field=form.currency %}</div>
+    <div class="col-6 col-md-2">{% include "partials/form_field.html" with field=form.tax_rate %}</div>
+    <div class="col-md-6">{% include "partials/form_field.html" with field=form.conditions %}</div>
+    <div class="col-md-6">{% include "partials/form_field.html" with field=form.notes %}</div>
+  </div></div></div>
+
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">Partidas</span>
+      <button type="button" class="btn btn-sm btn-outline-primary" id="add-item"><i class="bi bi-plus-lg"></i> Agregar partida</button>
+    </div>
+    {{ formset.management_form }}
+    {% for error in formset.non_form_errors %}<div class="alert alert-danger m-3 mb-0">{{ error }}</div>{% endfor %}
+    <div class="table-responsive"><table class="table align-middle mb-0" id="items-table">
+      <thead><tr><th style="min-width:260px">Producto</th><th style="width:130px">Cantidad</th><th style="width:150px">Precio unitario</th><th style="width:110px">Desc. %</th><th class="text-end" style="width:130px">Importe estimado</th><th></th></tr></thead>
+      <tbody id="items-body">
+      {% for f in formset %}
+        <tr class="item-row{% if f.errors %} row-error{% endif %}">
+          <td>{{ f.product }}{% for e in f.non_field_errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}{% for e in f.product.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}</td>
+          <td>{{ f.quantity }}{% for e in f.quantity.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}</td>
+          <td>{{ f.unit_price }}{% for e in f.unit_price.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}</td>
+          <td>{{ f.discount_pct }}{% for e in f.discount_pct.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}</td>
+          <td class="text-end line-total">—</td>
+          <td class="text-end"><span class="d-none">{{ f.DELETE }}</span><button type="button" class="btn btn-sm btn-outline-danger remove-item" title="Eliminar partida" aria-label="Eliminar partida"><i class="bi bi-trash"></i></button></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot><tr><td colspan="4" class="text-end small text-muted">Subtotal estimado (antes de IVA). El total definitivo lo calcula el servidor al guardar.</td><td class="text-end fw-semibold" id="estimate">—</td><td></td></tr></tfoot>
+    </table></div>
+    <div class="card-body small text-muted border-top">Precio vacío = precio de referencia del catálogo. Descuento máximo sin autorización: {{ max_discount|number }} %.</div>
+  </div>
+  <template id="item-template">
+    <tr class="item-row">
+      <td>{{ formset.empty_form.product }}</td><td>{{ formset.empty_form.quantity }}</td><td>{{ formset.empty_form.unit_price }}</td><td>{{ formset.empty_form.discount_pct }}</td>
+      <td class="text-end line-total">—</td>
+      <td class="text-end"><span class="d-none">{{ formset.empty_form.DELETE }}</span><button type="button" class="btn btn-sm btn-outline-danger remove-item" title="Eliminar partida" aria-label="Eliminar partida"><i class="bi bi-trash"></i></button></td>
+    </tr>
+  </template>
+  <script type="application/json" id="product-prices">{ {% for p in products %}"{{ p.pk }}": "{% if show_prices and p.reference_price is not None %}{{ p.reference_price }}{% endif %}"{% if not forloop.last %},{% endif %}{% endfor %} }</script>
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar borrador</button>
+    <a href="{% if quote.pk %}{% url 'quotes:quote_detail' quote.pk %}{% else %}{% url 'quotes:quote_list' %}{% endif %}" class="btn btn-outline-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}<script src="{% load static %}{% static 'js/quote_form.js' %}"></script>{% endblock %}

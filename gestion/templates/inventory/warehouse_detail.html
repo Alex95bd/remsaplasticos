@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ warehouse }}{% endblock %}
+{% block page_title %}Inventario{% endblock %}
+{% block content %}
+<a href="{% url 'inventory:warehouse_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Almacenes</a>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mt-1">
+  <h1 class="h4 fw-bold text-navy mb-0">{{ warehouse }}</h1>
+  <div class="d-flex gap-2"><a href="{% url 'inventory:stock_list' %}?almacen={{ warehouse.pk }}" class="btn btn-outline-secondary"><i class="bi bi-boxes me-1"></i> Existencias</a>
+  {% if perms.inventory.change_warehouse %}<a href="{% url 'inventory:warehouse_update' warehouse.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i> Editar</a>{% endif %}</div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-5"><div class="card border-0 shadow-sm"><div class="card-body"><dl class="row mb-0">
+    <dt class="col-sm-5">Dirección</dt><dd class="col-sm-7">{{ warehouse.address|default:"—"|linebreaksbr }}</dd>
+    <dt class="col-sm-5">Código externo</dt><dd class="col-sm-7">{{ warehouse.external_code|default:"—" }}</dd>
+    <dt class="col-sm-5">Estado</dt><dd class="col-sm-7">{% if warehouse.is_active %}Activo{% else %}Inactivo{% endif %}</dd>
+  </dl></div></div></div>
+  <div class="col-lg-7"><div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-semibold">Ubicaciones</div>
+    <ul class="list-group list-group-flush">{% for l in locations %}<li class="list-group-item d-flex justify-content-between"><span><strong>{{ l.code }}</strong> {{ l.description }}</span>{% if not l.is_active %}<span class="badge text-bg-secondary">Inactiva</span>{% endif %}</li>{% empty %}<li class="list-group-item text-muted small">Sin ubicaciones.</li>{% endfor %}</ul>
+    {% if perms.inventory.add_location %}<div class="card-body border-top"><form method="post" action="{% url 'inventory:location_create' warehouse.pk %}" class="row g-2">{% csrf_token %}
+      <div class="col-sm-4">{{ location_form.code }}</div><div class="col-sm-5">{{ location_form.description }}</div><input type="hidden" name="is_active" value="on">
+      <div class="col-sm-3 d-grid"><button class="btn btn-outline-primary">Agregar</button></div></form></div>{% endif %}
+  </div></div>
+</div>
+{% endblock %}

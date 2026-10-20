@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ section_title }}{% endblock %}
+{% block page_title %}Catálogo{% endblock %}
+{% block content %}
+<h1 class="h4 fw-bold text-navy mb-3">{% if object %}Editar {{ section_title|lower }} «{{ object }}»{% else %}Nueva {{ section_title|lower }}{% endif %}</h1>
+<div class="row"><div class="col-lg-6"><div class="card border-0 shadow-sm"><div class="card-body">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Guardar</button>
+      <a href="{{ back_url }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div></div></div></div>
+{% endblock %}

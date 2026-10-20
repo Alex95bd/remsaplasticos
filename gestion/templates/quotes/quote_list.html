@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}Cotizaciones{% endblock %}
+{% block page_title %}Cotizaciones{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 fw-bold text-navy mb-0">Cotizaciones</h1>
+  {% if perms.quotes.add_quote %}<a href="{% url 'quotes:quote_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Nueva cotización</a>{% endif %}
+</div>
+<form class="card border-0 shadow-sm mb-3" method="get"><div class="card-body row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="q">Folio o cliente</label><input type="search" class="form-control" id="q" name="q" value="{{ request.GET.q }}"></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="estado">Estado</label><select class="form-select" id="estado" name="estado"><option value="">Todos</option><option value="abiertas" {% if request.GET.estado == "abiertas" %}selected{% endif %}>Pendientes de seguimiento</option>{% for v, l in statuses %}<option value="{{ v }}" {% if request.GET.estado == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="responsable">Responsable</label><select class="form-select" id="responsable" name="responsable"><option value="">Todos</option>{% for u in owners %}<option value="{{ u.pk }}" {% if request.GET.responsable == u.pk|stringformat:"s" %}selected{% endif %}>{{ u.get_full_name|default:u.username }}</option>{% endfor %}</select></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="desde">Desde</label><input type="date" class="form-control" id="desde" name="desde" value="{{ request.GET.desde }}"></div>
+  <div class="col-6 col-md-2"><label class="form-label small" for="hasta">Hasta</label><input type="date" class="form-control" id="hasta" name="hasta" value="{{ request.GET.hasta }}"></div>
+  <div class="col-md-1 d-grid"><button class="btn btn-outline-primary" title="Filtrar"><i class="bi bi-funnel"></i></button></div>
+</div></form>
+<div class="card border-0 shadow-sm"><div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>Folio</th><th>Cliente</th><th class="d-none d-md-table-cell">Fecha</th><th class="d-none d-lg-table-cell">Vigencia</th><th class="d-none d-lg-table-cell">Responsable</th><th>Estado</th><th class="text-end">Total</th></tr></thead>
+    <tbody>
+    {% for q in quotes %}
+      <tr>
+        <td class="text-nowrap"><a href="{% url 'quotes:quote_detail' q.pk %}" class="fw-semibold">{{ q.folio }}</a></td>
+        <td>{{ q.customer.name }}</td>
+        <td class="d-none d-md-table-cell">{{ q.issue_date|date:"d/m/Y" }}</td>
+        <td class="d-none d-lg-table-cell">{{ q.valid_until|date:"d/m/Y" }}</td>
+        <td class="d-none d-lg-table-cell small">{{ q.owner.get_full_name|default:q.owner.username }}</td>
+        <td>{% include "quotes/_status_badge.html" with quote=q %}</td>
+        <td class="text-end text-nowrap">${{ q.total|money }} <span class="small text-muted">{{ q.currency }}</span></td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="text-center text-muted py-4">No hay cotizaciones que coincidan.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

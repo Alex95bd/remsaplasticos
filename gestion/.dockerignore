@@ -1,0 +1,9 @@
+.env
+*.sqlite3
+staticfiles/
+media/
+backups/
+htmlcov/
+.coverage
+__pycache__/
+*.pyc

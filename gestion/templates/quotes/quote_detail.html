@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}{{ quote.folio }}{% endblock %}
+{% block page_title %}Cotizaciones{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <a href="{% url 'quotes:quote_list' %}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Cotizaciones</a>
+    <h1 class="h4 fw-bold text-navy mb-0 mt-1">{{ quote.folio }} {% include "quotes/_status_badge.html" %}</h1>
+    <div class="text-muted">{% if perms.crm.view_party %}<a href="{% url 'crm:party_detail' quote.customer.pk %}">{{ quote.customer.name }}</a>{% else %}{{ quote.customer.name }}{% endif %}
+      · Responsable: {{ quote.owner.get_full_name|default:quote.owner.username }}{% if quote.duplicated_from %} · Copia de <a href="{% url 'quotes:quote_detail' quote.duplicated_from.pk %}">{{ quote.duplicated_from.folio }}</a>{% endif %}</div>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'quotes:quote_pdf' quote.pk %}" target="_blank" rel="noopener" class="btn btn-outline-secondary"><i class="bi bi-printer me-1"></i> Imprimir</a>
+    <a href="{% url 'quotes:quote_pdf' quote.pk %}?descargar=1" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</a>
+    {% if perms.quotes.add_quote %}<form method="post" action="{% url 'quotes:quote_duplicate' quote.pk %}" data-confirm="¿Crear una copia en borrador de esta cotización?">{% csrf_token %}<button class="btn btn-outline-primary"><i class="bi bi-copy me-1"></i> Duplicar</button></form>{% endif %}
+    {% if can_edit %}<a href="{% url 'quotes:quote_update' quote.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i> Editar</a>{% endif %}
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-xl-8">
+    <div class="card border-0 shadow-sm mb-3"><div class="card-body pb-2"><div class="row small">
+      <div class="col-6 col-md-3 mb-2"><div class="text-muted">Fecha</div>{{ quote.issue_date|date:"d/m/Y" }}</div>
+      <div class="col-6 col-md-3 mb-2"><div class="text-muted">Vigencia</div>{{ quote.valid_until|date:"d/m/Y" }}</div>
+      <div class="col-6 col-md-3 mb-2"><div class="text-muted">Moneda</div>{{ quote.currency }}</div>
+      <div class="col-6 col-md-3 mb-2"><div class="text-muted">IVA</div>{{ quote.tax_rate|number }} %</div>
+    </div></div>
+    <div class="table-responsive"><table class="table table-sm align-middle mb-0">
+      <thead><tr><th>#</th><th>SKU</th><th>Descripción</th><th class="text-end">Cantidad</th><th class="text-end">P. unitario</th><th class="text-end">Desc.</th><th class="text-end">Importe</th></tr></thead>
+      <tbody>{% for i in items %}<tr><td>{{ i.position }}</td><td class="text-nowrap">{{ i.sku }}</td><td>{{ i.description }}</td><td class="text-end text-nowrap">{{ i.quantity|number }} {{ i.unit }}</td><td class="text-end">${{ i.unit_price|money:4 }}</td><td class="text-end">{% if i.discount_pct %}{{ i.discount_pct|number }}%{% else %}—{% endif %}</td><td class="text-end">${{ i.line_total|money }}</td></tr>
+      {% empty %}<tr><td colspan="7" class="text-muted text-center py-3">Sin partidas.</td></tr>{% endfor %}</tbody>
+      <tfoot class="small">
+        <tr><td colspan="6" class="text-end">Subtotal</td><td class="text-end">${{ quote.subtotal|money }}</td></tr>
+        <tr><td colspan="6" class="text-end">Descuentos</td><td class="text-end">-${{ quote.discount_total|money }}</td></tr>
+        <tr><td colspan="6" class="text-end">IVA {{ quote.tax_rate|number }}%</td><td class="text-end">${{ quote.tax_total|money }}</td></tr>
+        <tr class="fw-bold"><td colspan="6" class="text-end">Total {{ quote.currency }}</td><td class="text-end">${{ quote.total|money }}</td></tr>
+      </tfoot>
+    </table></div>
+    {% if quote.conditions or quote.notes or quote.rejection_reason %}<div class="card-body border-top small">
+      {% if quote.conditions %}<div class="mb-2"><strong>Condiciones:</strong><br>{{ quote.conditions|linebreaksbr }}</div>{% endif %}
+      {% if quote.notes %}<div class="mb-2"><strong>Observaciones:</strong><br>{{ quote.notes|linebreaksbr }}</div>{% endif %}
+      {% if quote.rejection_reason %}<div class="text-danger"><strong>Motivo de rechazo:</strong> {{ quote.rejection_reason }}</div>{% endif %}
+    </div>{% endif %}
+    </div>
+    <div class="alert alert-light border small"><i class="bi bi-info-circle me-1"></i>Las cotizaciones no apartan ni descuentan inventario.</div>
+  </div>
+  <div class="col-xl-4">
+    {% if can_manage and transitions %}
+    <div class="card border-0 shadow-sm mb-3"><div class="card-body">
+      <h2 class="h6 fw-semibold">Cambiar estado</h2>
+      <form method="post" action="{% url 'quotes:quote_status' quote.pk %}" data-confirm="¿Confirmas el cambio de estado?">{% csrf_token %}
+        <select name="status" class="form-select mb-2" aria-label="Nuevo estado">{% for v, l in transitions %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select>
+        <textarea name="reason" class="form-control mb-2" rows="2" placeholder="Motivo (obligatorio si se rechaza)" aria-label="Motivo"></textarea>
+        <button class="btn btn-primary btn-sm">Actualizar estado</button>
+      </form>
+    </div></div>
+    {% endif %}
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-chat-left-text me-1 text-cyan"></i> Seguimiento</div>
+      {% if can_manage %}<div class="card-body border-bottom">
+        <form method="post" action="{% url 'quotes:quote_follow_up' quote.pk %}">{% csrf_token %}
+          <div class="row g-2"><div class="col-6">{{ follow_up_form.kind }}</div><div class="col-6">{{ follow_up_form.next_action_date }}</div>
+          <div class="col-12">{{ follow_up_form.notes }}</div></div>
+          <button class="btn btn-sm btn-outline-primary mt-2">Registrar seguimiento</button>
+        </form></div>{% endif %}
+      <ul class="list-group list-group-flush">
+        {% for f in follow_ups %}<li class="list-group-item small"><div class="d-flex justify-content-between"><strong>{{ f.get_kind_display }}</strong><span class="text-muted">{{ f.created_at|date:"d/m/Y H:i" }} · {{ f.user.username }}</span></div>{{ f.notes|linebreaksbr }}{% if f.next_action_date %}<div class="text-muted">Próxima acción: {{ f.next_action_date|date:"d/m/Y" }}</div>{% endif %}</li>
+        {% empty %}<li class="list-group-item small text-muted">Sin seguimiento registrado.</li>{% endfor %}
+      </ul>
+    </div>
+    {% if history is not None %}{% include "partials/history.html" %}{% endif %}
+  </div>
+</div>
+{% endblock %}

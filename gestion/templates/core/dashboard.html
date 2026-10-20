@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load gestion %}
+{% block title %}Panel{% endblock %}
+{% block page_title %}Panel principal{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+  <div>
+    <h1 class="h4 fw-bold text-navy mb-0">Hola, {{ user.first_name|default:user.username }}</h1>
+    <p class="text-muted mb-0 small">Indicadores calculados con la información registrada en el sistema.</p>
+  </div>
+  {% if perms.catalog.add_product %}
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Nuevo producto</a>
+  {% endif %}
+</div>
+
+<div class="row g-3 mb-4">
+  {% if product_stats %}
+    <div class="col-6 col-xl-3">
+      <a class="kpi-card card border-0 shadow-sm h-100 text-decoration-none" href="{% url 'catalog:product_list' %}">
+        <div class="card-body"><div class="kpi-icon"><i class="bi bi-boxes"></i></div>
+          <div class="kpi-value">{{ product_stats.active }}</div><div class="kpi-label">Productos activos</div></div>
+      </a>
+    </div>
+    <div class="col-6 col-xl-3">
+      <a class="kpi-card card border-0 shadow-sm h-100 text-decoration-none" href="{% url 'catalog:product_list' %}?estado=inactivos">
+        <div class="card-body"><div class="kpi-icon kpi-muted"><i class="bi bi-archive"></i></div>
+          <div class="kpi-value">{{ product_stats.inactive }}</div><div class="kpi-label">Productos inactivos</div></div>
+      </a>
+    </div>
+    <div class="col-6 col-xl-3">
+      <a class="kpi-card card border-0 shadow-sm h-100 text-decoration-none" href="{% url 'catalog:category_list' %}">
+        <div class="card-body"><div class="kpi-icon"><i class="bi bi-tags"></i></div>
+          <div class="kpi-value">{{ category_count }}</div><div class="kpi-label">Categorías activas</div></div>
+      </a>
+    </div>
+    {% if perms.catalog.view_reference_price %}
+    <div class="col-6 col-xl-3">
+      <div class="kpi-card card border-0 shadow-sm h-100">
+        <div class="card-body"><div class="kpi-icon {% if product_stats.without_price %}kpi-warning{% endif %}"><i class="bi bi-currency-dollar"></i></div>
+          <div class="kpi-value">{{ product_stats.without_price }}</div><div class="kpi-label">Activos sin precio de referencia</div></div>
+      </div>
+    </div>
+    {% endif %}
+  {% endif %}
+  {% if active_users is not None %}
+    <div class="col-6 col-xl-3">
+      <a class="kpi-card card border-0 shadow-sm h-100 text-decoration-none" href="{% url 'accounts:user_list' %}">
+        <div class="card-body"><div class="kpi-icon"><i class="bi bi-people"></i></div>
+          <div class="kpi-value">{{ active_users }}</div><div class="kpi-label">Usuarios activos</div></div>
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-activity me-1 text-cyan"></i>
+        {% if activity_scope == "all" %}Actividad reciente{% else %}Mi actividad reciente{% endif %}</div>
+      <ul class="list-group list-group-flush">
+        {% for entry in activity %}
+          <li class="list-group-item small d-flex justify-content-between gap-2">
+            <span><span class="badge badge-action-{{ entry.action }} me-1">{{ entry.get_action_display }}</span>
+              {{ entry.object_repr|default:entry.message|truncatechars:70 }}
+              {% if activity_scope == "all" %}<span class="text-muted">· {{ entry.username|default:"sistema" }}</span>{% endif %}</span>
+            <span class="text-muted text-nowrap">{{ entry.created_at|timesince }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted small">Sin actividad registrada.</li>
+        {% endfor %}
+      </ul>
+      {% if activity_scope == "all" %}<div class="card-footer bg-white text-end"><a href="{% url 'audit:list' %}" class="small">Ver bitácora completa</a></div>{% endif %}
+    </div>
+  </div>
+  <div class="col-lg-5">
+    {% if recent_products %}
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-clock-history me-1 text-cyan"></i> Productos actualizados recientemente</div>
+      <ul class="list-group list-group-flush">
+        {% for product in recent_products %}
+          <li class="list-group-item small d-flex justify-content-between">
+            <a href="{% url 'catalog:product_detail' product.pk %}">{{ product.sku }} · {{ product.name|truncatechars:40 }}</a>
+            {% if not product.is_active %}<span class="badge text-bg-secondary">Inactivo</span>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-signpost-2 me-1 text-cyan"></i> Módulos en desarrollo</div>
+      <ul class="list-group list-group-flush">
+        {% for icon, name, phase in upcoming_modules %}
+          <li class="list-group-item small d-flex justify-content-between align-items-center text-muted">
+            <span><i class="bi {{ icon }} me-2"></i>{{ name }}</span><span class="badge text-bg-light border">{{ phase }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer bg-white small text-muted">Los indicadores de cotizaciones, inventario y agenda se agregarán al panel cuando existan esos módulos.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
